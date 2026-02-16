@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Question Builder - Prefix</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b8cee",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            scrollbar-width: none;
+        }
+
+        .kb-shortcut {
+            font-family: monospace;
+            padding: 0.125rem 0.375rem;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        .dark .kb-shortcut {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #94a3b8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
+        .animate-scaleUp { animation: scaleUp 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    </style>
+</head>
+
+<body class="bg-[#f6f7f8] dark:bg-[#101922] font-display text-slate-900 dark:text-slate-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-[#111a22] border-b border-slate-200 dark:border-[#324d67] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 text-primary">
+                <span class="material-symbols-outlined text-3xl font-bold">diamond</span>
+                <h1 class="text-xl font-extrabold tracking-tight dark:text-white">Question <span
+                        class="text-slate-400 font-light">Prepper</span></h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="downloadJSON()"
+                    class="flex items-center gap-2 bg-slate-100 dark:bg-[#233648] hover:bg-slate-200 dark:hover:bg-[#2d4358] px-4 py-2 rounded-lg text-sm font-bold transition-all">
+                    <span class="material-symbols-outlined text-lg">json_schema</span>
+                    JSON for Upload
+                </button>
+                <button onclick="generatePDF()"
+                    class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                    <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+                    Generate PDF
+                </button>
+                <button onclick="clearAll()"
+                    class="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-2 rounded-lg transition-all"
+                    title="Clear all questions">
+                    <span class="material-symbols-outlined">delete_sweep</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="max-w-5xl mx-auto px-4 py-2 relative">
+        
+        <!-- Input Section (Centered) -->
+        <div class="space-y-6">
+            <div class="bg-white dark:bg-[#1a252f] rounded-2xl p-6 border border-slate-200 dark:border-[#324d67] shadow-lg">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-lg font-bold flex items-center gap-2 uppercase tracking-wide text-primary">
+                        <span class="material-symbols-outlined">edit_note</span>
+                        Entry Form
+                    </h2>
+                    <div class="flex items-center gap-3">
+                         <span class="text-[10px] text-slate-500 font-black uppercase bg-slate-100 dark:bg-[#111a22] px-2 py-1 rounded">Fast Mode active</span>
+                         <button onclick="toggleDraftInfo()" class="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-primary transition-colors lg:hidden">
+                            <span class="material-symbols-outlined text-lg">list_alt</span>
+                            Show List
+                         </button>
+                    </div>
+                </div>
+
+                <form id="entry-form" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <!-- LEFT COLUMN: Question Parameters (Col-span-12 lg:col-span-4) -->
+                    <div class="lg:col-span-4 space-y-4">
+                        <div class="p-5 bg-slate-50 dark:bg-[#111a22] rounded-xl border border-slate-200 dark:border-[#324d67] space-y-5 h-full">
+                            <h4 class="text-xs font-bold text-primary flex items-center gap-2 uppercase tracking-wider mb-2">
+                                <span class="material-symbols-outlined text-sm">tune</span> Parameters
+                            </h4>
+
+                            <!-- Language Mode -->
+                            <div class="space-y-1.5">
+                                 <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Language</label>
+                                 <div class="grid grid-cols-2 gap-2">
+                                     <label class="cursor-pointer group">
+                                         <input type="radio" name="lang" value="english" class="peer sr-only" checked>
+                                         <div class="py-2 px-1 rounded-lg border border-slate-200 dark:border-[#324d67] bg-white dark:bg-[#1a252f] text-center transition-all peer-checked:bg-primary/10 peer-checked:border-primary/50 peer-checked:text-primary group-hover:bg-slate-50 dark:group-hover:bg-[#233648] shadow-sm">
+                                             <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">English</span>
+                                         </div>
+                                     </label>
+                                     <label class="cursor-pointer group">
+                                         <input type="radio" name="lang" value="bengali" class="peer sr-only">
+                                         <div class="py-2 px-1 rounded-lg border border-slate-200 dark:border-[#324d67] bg-white dark:bg-[#1a252f] text-center transition-all peer-checked:bg-primary/10 peer-checked:border-primary/50 peer-checked:text-primary group-hover:bg-slate-50 dark:group-hover:bg-[#233648] shadow-sm">
+                                             <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Bengali</span>
+                                         </div>
+                                     </label>
+                                 </div>
+                            </div>
+
+                            <!-- Role Context -->
+                            <div class="space-y-1.5">
+                                 <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Audience</label>
+                                 <div class="grid grid-cols-1 gap-2">
+                                     <label class="cursor-pointer group">
+                                         <input type="radio" name="role" value="aspirant" class="peer sr-only" checked>
+                                         <div class="flex items-center gap-3 p-2 rounded-lg border border-slate-200 dark:border-[#324d67] bg-white dark:bg-[#1a252f] transition-all peer-checked:bg-primary/10 peer-checked:border-primary/50 peer-checked:text-primary group-hover:bg-slate-50 dark:group-hover:bg-[#233648] shadow-sm">
+                                             <div class="w-8 h-8 rounded bg-slate-100 dark:bg-[#111a22] flex items-center justify-center text-slate-500 peer-checked:text-primary peer-checked:bg-primary/20">
+                                                 <span class="material-symbols-outlined text-sm">work</span>
+                                             </div>
+                                             <div class="text-left">
+                                                 <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Aspirant</p>
+                                             </div>
+                                         </div>
+                                     </label>
+                                     <label class="cursor-pointer group">
+                                         <input type="radio" name="role" value="student" class="peer sr-only">
+                                         <div class="flex items-center gap-3 p-2 rounded-lg border border-slate-200 dark:border-[#324d67] bg-white dark:bg-[#1a252f] transition-all peer-checked:bg-primary/10 peer-checked:border-primary/50 peer-checked:text-primary group-hover:bg-slate-50 dark:group-hover:bg-[#233648] shadow-sm">
+                                              <div class="w-8 h-8 rounded bg-slate-100 dark:bg-[#111a22] flex items-center justify-center text-slate-500 peer-checked:text-primary peer-checked:bg-primary/20">
+                                                 <span class="material-symbols-outlined text-sm">school</span>
+                                             </div>
+                                             <div class="text-left">
+                                                 <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Student</p>
+                                             </div>
+                                         </div>
+                                     </label>
+                                 </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="border-t border-slate-200 dark:border-[#324d67]"></div>
+
+                            <!-- DYNAMIC FIELDS: ASPIRANT -->
+                            <div id="fields-aspirant" class="contents">
+                                <!-- Exam Category -->
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Exam Category</label>
+                                    <div class="relative">
+                                        <select id="exam-cat" class="w-full bg-white dark:bg-[#1a252f] border border-slate-200 dark:border-[#324d67] rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer hover:bg-slate-50 dark:hover:bg-[#233648] shadow-sm" onchange="handleAspirantCategoryChange(this.options[this.selectedIndex].getAttribute('data-id'))">
+                                            <option value="">Loading...</option>
+                                        </select>
+                                        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">expand_more</span>
+                                    </div>
+                                </div>
+
+                                <!-- Subject (Aspirant) -->
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Subject</label>
+                                    <div class="relative">
+                                        <select id="exam-sub" class="w-full bg-white dark:bg-[#1a252f] border border-slate-200 dark:border-[#324d67] rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer hover:bg-slate-50 dark:hover:bg-[#233648] shadow-sm">
+                                            <option value="">Select Category First</option>
+                                        </select>
+                                        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">expand_more</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DYNAMIC FIELDS: STUDENT -->
+                            <div id="fields-student" class="contents hidden">
+                                <!-- Class -->
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Class</label>
+                                    <div class="relative">
+                                        <select id="class-cat" class="w-full bg-white dark:bg-[#1a252f] border border-slate-200 dark:border-[#324d67] rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer hover:bg-slate-50 dark:hover:bg-[#233648] shadow-sm" onchange="handleStudentClassChange(this.options[this.selectedIndex].getAttribute('data-id'))">
+                                            <option value="">Loading Classes...</option>
+                                        </select>
+                                        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">expand_more</span>
+                                    </div>
+                                </div>
+
+                                <!-- Subject (Student) -->
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Subject</label>
+                                    <div class="relative">
+                                        <select id="class-sub" class="w-full bg-white dark:bg-[#1a252f] border border-slate-200 dark:border-[#324d67] rounded-lg px-3 py-2 text-xs text-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer hover:bg-slate-50 dark:hover:bg-[#233648] shadow-sm">
+                                            <option value="">Select Class First</option>
+                                        </select>
+                                        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">expand_more</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Question Content (Col-span-12 lg:col-span-8) -->
+                    <div class="lg:col-span-8 space-y-5">
+                        <div class="bg-white dark:bg-[#1a252f] p-1 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative group focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all">
+                             <label class="absolute -top-2.5 left-3 px-2 bg-white dark:bg-[#1a252f] text-[10px] font-bold text-primary uppercase tracking-wider z-10">Question Text</label>
+                            <textarea id="q-text" rows="3" class="w-full bg-transparent border-none focus:ring-0 text-sm p-4 dark:text-white placeholder-slate-400 leading-relaxed resize-none" placeholder="Type your question here... (Ctrl+Enter to save)"></textarea>
+                            <div class="absolute bottom-2 right-2 flex gap-2 opacity-0 group-focus-within:opacity-100 transition-opacity">
+                                <span class="bg-slate-100 dark:bg-[#111a22] text-[10px] text-slate-500 font-mono px-2 py-1 rounded border border-slate-200 dark:border-slate-700">Markdown supported</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                             <div class="flex items-center justify-between">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Answer Options</label>
+                            </div>
+                            
+                            <!-- Options Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Option A -->
+                                <div class="bg-white dark:bg-[#1a252f] p-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3 group focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                                    <div class="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 group-focus-within:bg-primary group-focus-within:text-white transition-colors">A</div>
+                                    <input type="text" id="q-a" class="flex-1 bg-transparent border-none focus:ring-0 p-0 text-sm dark:text-white placeholder-slate-400" placeholder="Option A">
+                                </div>
+                                <!-- Option B -->
+                                <div class="bg-white dark:bg-[#1a252f] p-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3 group focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                                    <div class="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 group-focus-within:bg-primary group-focus-within:text-white transition-colors">B</div>
+                                    <input type="text" id="q-b" class="flex-1 bg-transparent border-none focus:ring-0 p-0 text-sm dark:text-white placeholder-slate-400" placeholder="Option B">
+                                </div>
+                                <!-- Option C -->
+                                <div class="bg-white dark:bg-[#1a252f] p-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3 group focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                                    <div class="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 group-focus-within:bg-primary group-focus-within:text-white transition-colors">C</div>
+                                    <input type="text" id="q-c" class="flex-1 bg-transparent border-none focus:ring-0 p-0 text-sm dark:text-white placeholder-slate-400" placeholder="Option C">
+                                </div>
+                                <!-- Option D -->
+                                <div class="bg-white dark:bg-[#1a252f] p-3 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3 group focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                                    <div class="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 group-focus-within:bg-primary group-focus-within:text-white transition-colors">D</div>
+                                    <input type="text" id="q-d" class="flex-1 bg-transparent border-none focus:ring-0 p-0 text-sm dark:text-white placeholder-slate-400" placeholder="Option D">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <!-- Correct Answer Selection -->
+                            <div class="flex-1 space-y-1.5">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1">Correct Answer</label>
+                                <div class="flex bg-slate-100 dark:bg-[#111a22] p-1 rounded-xl border border-slate-200 dark:border-[#324d67]">
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="ans" value="A" class="peer sr-only" checked>
+                                        <div class="py-2 rounded-lg text-center text-xs font-bold transition-all peer-checked:bg-white dark:peer-checked:bg-primary peer-checked:text-primary dark:peer-checked:text-white text-slate-500 dark:text-[#92adc9] hover:bg-white/50 dark:hover:bg-white/5">A</div>
+                                    </label>
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="ans" value="B" class="peer sr-only">
+                                        <div class="py-2 rounded-lg text-center text-xs font-bold transition-all peer-checked:bg-white dark:peer-checked:bg-primary peer-checked:text-primary dark:peer-checked:text-white text-slate-500 dark:text-[#92adc9] hover:bg-white/50 dark:hover:bg-white/5">B</div>
+                                    </label>
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="ans" value="C" class="peer sr-only">
+                                        <div class="py-2 rounded-lg text-center text-xs font-bold transition-all peer-checked:bg-white dark:peer-checked:bg-primary peer-checked:text-primary dark:peer-checked:text-white text-slate-500 dark:text-[#92adc9] hover:bg-white/50 dark:hover:bg-white/5">C</div>
+                                    </label>
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="ans" value="D" class="peer sr-only">
+                                        <div class="py-2 rounded-lg text-center text-xs font-bold transition-all peer-checked:bg-white dark:peer-checked:bg-primary peer-checked:text-primary dark:peer-checked:text-white text-slate-500 dark:text-[#92adc9] hover:bg-white/50 dark:hover:bg-white/5">D</div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Add Button -->
+                            <div class="w-1/3 pt-6"> <!-- Offset for label height -->
+                                <button type="button" onclick="addQuestion()" class="w-full h-[42px] bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95">
+                                    <span class="material-symbols-outlined text-lg">add_circle</span>
+                                    <span>Add</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white dark:bg-[#1a252f] p-4 rounded-2xl border border-slate-200 dark:border-[#324d67] shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black uppercase text-slate-500">Total Drafts</p>
+                        <h3 id="stat-count" class="text-2xl font-black text-primary">0</h3>
+                    </div>
+                    <span class="material-symbols-outlined text-3xl text-primary/20">stacks</span>
+                </div>
+                <div class="bg-primary text-white p-4 rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black uppercase opacity-80">Ready Status</p>
+                        <h3 class="text-sm font-bold">Waiting for input</h3>
+                    </div>
+                    <span class="material-symbols-outlined text-3xl opacity-30">check_circle</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- RIGHT SLIDER: Draft List -->
+    <div id="draft-slider" class="fixed inset-y-0 right-0 w-80 bg-white dark:bg-[#1a252f] shadow-2xl transform translate-x-full transition-transform duration-300 z-50 border-l border-slate-200 dark:border-[#324d67] flex flex-col">
+        <div class="p-4 border-b border-slate-200 dark:border-[#324d67] flex items-center justify-between bg-slate-50 dark:bg-[#111a22]">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">list_alt</span>
+                <span id="slider-count">0</span> Drafts
+            </h2>
+             <button onclick="toggleDraftInfo()" class="text-slate-400 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 space-y-3" id="draft-list">
+             <!-- Draft Items will be injected here -->
+             <div id="empty-state" class="text-center py-10 opacity-50">
+                <span class="material-symbols-outlined text-4xl mb-2">post_add</span>
+                <p class="text-xs">No drafts yet</p>
+             </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-200 dark:border-[#324d67] bg-slate-50 dark:bg-[#111a22]">
+            <button onclick="clearAll()" class="w-full py-2 text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors border border-red-200 dark:border-red-500/20">
+                Clear All Drafts
+            </button>
+        </div>
+    </div>
+    
+    <!-- Floating Toggle for Slider (Visible on large screens too now) -->
+    <button onclick="toggleDraftInfo()" class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group">
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-180 transition-transform duration-500">menu_open</span>
+        <span class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white text-[10px] font-bold flex items-center justify-center border-2 border-white dark:border-[#101922]" id="floating-count">0</span>
+    </button>
+
+    <!-- Slider Backdrop -->
+    <div id="slider-backdrop" onclick="toggleDraftInfo()" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden transition-opacity opacity-0"></div>
+
+    <!-- Clear All Confirmation Modal -->
+    <div id="modal-clear-confirm" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm animate-fadeIn" onclick="toggleClearModal(false)"></div>
+        <div class="bg-white dark:bg-[#1a252f] w-full max-w-[340px] rounded-2xl shadow-2xl relative z-10 p-6 border border-slate-200 dark:border-[#324d67] animate-scaleUp">
+            <div class="w-12 h-12 bg-red-100 dark:bg-red-500/10 rounded-full flex items-center justify-center mb-4 mx-auto">
+                <span class="material-symbols-outlined text-red-500 text-2xl">delete_sweep</span>
+            </div>
+            <h3 class="text-lg font-bold text-center dark:text-white mb-2">Clear All Drafts?</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed mb-6">This will permanently remove all <span class="font-bold text-red-500" id="clear-count-text">0</span> questions from your current draft list. This action cannot be undone.</p>
+            
+            <div class="flex gap-3">
+                <button onclick="toggleClearModal(false)" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    No, Cancel
+                </button>
+                <button onclick="confirmClearAll()" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/30 transition-all">
+                    Yes, Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = JSON.parse(localStorage.getItem('prefix_draft_questions') || '[]');
+
+        function toggleDraftInfo() {
+            const slider = document.getElementById('draft-slider');
+            const backdrop = document.getElementById('slider-backdrop');
+            
+            const isClosed = slider.classList.contains('translate-x-full');
+            
+            if (isClosed) {
+                // Open
+                slider.classList.remove('translate-x-full');
+                backdrop.classList.remove('hidden');
+                // slight delay to allow transition to work
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                });
+            } else {
+                // Close
+                slider.classList.add('translate-x-full');
+                backdrop.classList.add('opacity-0');
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                }, 300); // match transition duration
+            }
+        }
+
+        function updateUI() {
+            const list = document.getElementById('draft-list');
+            const emptyState = document.getElementById('empty-state');
+            const sliderCount = document.getElementById('slider-count');
+            const floatingCount = document.getElementById('floating-count');
+            const statCount = document.getElementById('stat-count');
+            
+            // Helper to safe-set innerText
+            const setSafe = (el, val) => { if(el) el.innerText = val };
+
+            setSafe(sliderCount, questions.length);
+            setSafe(floatingCount, questions.length);
+            setSafe(statCount, questions.length);
+
+            if (questions.length === 0) {
+                if (list) {
+                    list.innerHTML = '';
+                    if(emptyState) list.appendChild(emptyState);
+                }
+                return;
+            }
+
+            if (list) {
+                list.innerHTML = questions.slice().reverse().map((q, idx) => `
+                    <div class="bg-white dark:bg-[#1a252f] p-4 rounded-2xl border border-slate-200 dark:border-[#324d67] shadow-sm hover:border-red-400 dark:hover:border-red-500 transition-all cursor-pointer group" onclick="removeQuestion(${questions.length - 1 - idx})">
+                        <div class="flex justify-between items-start gap-4 mb-3">
+                            <p class="text-sm font-bold dark:text-white leading-relaxed flex-1">${q.text}</p>
+                            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-black">#${questions.length - idx}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-1">
+                            <p class="text-[10px] ${q.ans === 'A' ? 'text-primary font-bold' : 'text-slate-500 dark:text-[#92adc9]'}">A. ${q.a}</p>
+                            <p class="text-[10px] ${q.ans === 'B' ? 'text-primary font-bold' : 'text-slate-500 dark:text-[#92adc9]'}">B. ${q.b}</p>
+                            <p class="text-[10px] ${q.ans === 'C' ? 'text-primary font-bold' : 'text-slate-500 dark:text-[#92adc9]'}">C. ${q.c}</p>
+                            <p class="text-[10px] ${q.ans === 'D' ? 'text-primary font-bold' : 'text-slate-500 dark:text-[#92adc9]'}">D. ${q.d}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function addQuestion() {
+            // Core inputs
+            const text = document.getElementById('q-text').value.trim();
+            const a = document.getElementById('q-a').value.trim();
+            const b = document.getElementById('q-b').value.trim();
+            const c = document.getElementById('q-c').value.trim();
+            const d = document.getElementById('q-d').value.trim();
+
+            const ansSelector = document.querySelector('input[name="ans"]:checked');
+            const ans = ansSelector ? ansSelector.value : 'A';
+
+            // New Parameter inputs
+            const lang = document.querySelector('input[name="lang"]:checked')?.value || 'english';
+            const role = document.querySelector('input[name="role"]:checked')?.value || 'aspirant';
+
+            let category = '';
+            let subject = '';
+
+            if (role === 'aspirant') {
+                category = document.getElementById('exam-cat').value;
+                subject = document.getElementById('exam-sub').value;
+            } else {
+                category = document.getElementById('class-cat').value;
+                subject = document.getElementById('class-sub').value;
+            }
+
+            // Validation
+            if (!text || !a || !b || !c || !d) {
+                alert("Please fill all question fields!");
+                return;
+            }
+
+            questions.push({
+                text, a, b, c, d, ans,
+                lang, role, category, subject
+            });
+            localStorage.setItem('prefix_draft_questions', JSON.stringify(questions));
+
+            // Clear inputs (but keep category/role as is for bulk entry)
+            document.getElementById('q-text').value = '';
+            document.getElementById('q-a').value = '';
+            document.getElementById('q-b').value = '';
+            document.getElementById('q-c').value = '';
+            document.getElementById('q-d').value = '';
+            document.getElementById('q-text').focus();
+
+            updateUI();
+        }
+
+        function removeQuestion(idx) {
+            if (confirm("Remove this question?")) {
+                questions.splice(idx, 1);
+                localStorage.setItem('prefix_draft_questions', JSON.stringify(questions));
+                updateUI();
+            }
+        }
+
+        function clearAll() {
+            if (questions.length === 0) return;
+            document.getElementById('clear-count-text').innerText = questions.length;
+            toggleClearModal(true);
+        }
+
+        function toggleClearModal(show) {
+            const modal = document.getElementById('modal-clear-confirm');
+            if (show) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function confirmClearAll() {
+            questions = [];
+            localStorage.removeItem('prefix_draft_questions');
+            updateUI();
+            toggleClearModal(false);
+            // Optionally close the slider if it was open
+            const slider = document.getElementById('draft-slider');
+            if (!slider.classList.contains('translate-x-full')) {
+                toggleDraftInfo();
+            }
+        }
+
+        function downloadJSON() {
+            if (questions.length === 0) return alert("Add some questions first!");
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questions, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "prefix_bulk_upload.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function generatePDF() {
+            try {
+                if (questions.length === 0) return alert("Add some questions first!");
+                
+                // --- Safe Library Access ---
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    return alert("PDF Library not loaded yet. Please wait a moment or refresh.");
+                }
+                const jsPDF = window.jspdf.jsPDF;
+                
+                const doc = new jsPDF({
+                    orientation: 'p',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // --- Styling Config ---
+                const primaryColor = [43, 140, 238]; // #2b8cee
+                const secondaryColor = [100, 116, 139]; // slate-500
+                const textColor = [30, 41, 59]; // slate-800
+                
+                // --- Header & Branding ---
+                const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+                const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+
+                doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+                doc.setLineWidth(1.5);
+                doc.line(14, 15, 40, 15);
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(22);
+                doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+                doc.text("PREFIX", 14, 25);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+                doc.text("QUESTION BANK EXPORT", 14, 31);
+
+                // Metadata Info Right Side
+                doc.setFontSize(8);
+                const dateStr = new Date().toLocaleString();
+                doc.text(`Exported: ${dateStr}`, pageWidth - 14, 25, { align: "right" });
+                doc.text(`Total Questions: ${questions.length}`, pageWidth - 14, 30, { align: "right" });
+
+                // --- Table Preparation ---
+                const tableData = questions.map((q, i) => {
+                    const optA = (q.ans === 'A' ? '-> [A] ' : '   A. ') + (q.a || '');
+                    const optB = (q.ans === 'B' ? '-> [B] ' : '   B. ') + (q.b || '');
+                    const optC = (q.ans === 'C' ? '-> [C] ' : '   C. ') + (q.c || '');
+                    const optD = (q.ans === 'D' ? '-> [D] ' : '   D. ') + (q.d || '');
+
+                    const category = q.category || 'N/A';
+                    const subject = q.subject || 'N/A';
+                    const language = (q.lang || 'EN').toUpperCase();
+                    const meta = `${category} / ${subject}\n(${language})`;
+
+                    return [
+                        i + 1,
+                        { content: q.text || '', styles: { fontStyle: 'bold' } },
+                        `${optA}\n${optB}\n${optC}\n${optD}`,
+                        meta
+                    ];
+                });
+
+                doc.autoTable({
+                    startY: 40,
+                    head: [['ID', 'Question Text', 'Options (Correct marked with ->)', 'Category / Subject']],
+                    body: tableData,
+                    theme: 'striped',
+                    headStyles: {
+                        fillColor: primaryColor,
+                        textColor: 255,
+                        fontSize: 10,
+                        fontStyle: 'bold',
+                        halign: 'center'
+                    },
+                    bodyStyles: {
+                        fontSize: 9,
+                        font: "helvetica",
+                        textColor: textColor,
+                        cellPadding: 5
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 12, halign: 'center' },
+                        1: { cellWidth: 'auto' },
+                        2: { cellWidth: 65 },
+                        3: { cellWidth: 40, fontSize: 8 } // Moved secondary color logic to didParseCell if needed, but keeping it simple
+                    },
+                    alternateRowStyles: {
+                        fillColor: [248, 250, 252]
+                    },
+                    margin: { top: 40, bottom: 20 },
+                    didDrawPage: function (data) {
+                        const totalPages = doc.internal.getNumberOfPages();
+                        doc.setFontSize(8);
+                        doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+                        doc.text(`Page ${totalPages}`, data.settings.margin.left, pageHeight - 10);
+                        doc.text("Generated by Prefix Question Prepper Tool", pageWidth - 14, pageHeight - 10, { align: "right" });
+                    }
+                });
+
+                doc.save(`Prefix_Export_${new Date().getTime()}.pdf`);
+            } catch (err) {
+                console.error("PDF Export Error:", err);
+                alert("Failed to generate PDF. Check console for details.");
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return;
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                addQuestion();
+            }
+        });
+
+        // --- Question Form Logic (Dynamic Fields) ---
+        function toggleRoleFields() {
+            const roleInput = document.querySelector('input[name="role"]:checked');
+            if (!roleInput) return;
+
+            const role = roleInput.value;
+            const fieldsAspirant = document.getElementById('fields-aspirant');
+            const fieldsStudent = document.getElementById('fields-student');
+
+            if (role === 'aspirant') {
+                fieldsAspirant.classList.remove('hidden');
+                fieldsStudent.classList.add('hidden');
+            } else {
+                fieldsAspirant.classList.add('hidden');
+                fieldsStudent.classList.remove('hidden');
+            }
+        }
+
+        // Attach event listeners to role radio buttons
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', toggleRoleFields);
+        });
+
+        // Initialize on load
+        toggleRoleFields();
+        loadMetadata();
+
+        async function loadMetadata() {
+            const examCat = document.getElementById('exam-cat');
+            const classCat = document.getElementById('class-cat');
+            const classSub = document.getElementById('class-sub');
+
+            if (examCat) examCat.innerHTML = '<option value="">Loading...</option>';
+            if (classCat) classCat.innerHTML = '<option value="">Loading Classes...</option>';
+
+            try {
+                const response = await fetch('api/admin/manage_taxonomy.php');
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const subjects = result.data.subject || []; // Effective Classes
+                    const categories = result.data.category || [];
+
+                    // 1. Exam Categories
+                    if (examCat) {
+                        examCat.innerHTML = '<option value="" selected disabled>Select Exam</option>' +
+                            categories.map(c => `<option value="${c.name}" data-id="${c.id}">${c.name}</option>`).join('');
+                    }
+
+                    // 2. Student Classes
+                    if (classCat) {
+                        classCat.innerHTML = '<option value="" selected disabled>Select Class</option>' +
+                            subjects.map(s => `<option value="${s.name}" data-id="${s.id}">${s.name}</option>`).join('');
+                    }
+                    
+                    // 3. Reset Subjects
+                    if (classSub) {
+                        classSub.innerHTML = '<option value="" selected disabled>Select Class First</option>';
+                    }
+                }
+            } catch (error) {
+                console.error("Metadata load failed", error);
+            }
+        }
+
+        async function handleStudentClassChange(classId) {
+            const subSelect = document.getElementById('class-sub');
+            if (!subSelect) return;
+
+            if (!classId) {
+                subSelect.innerHTML = '<option value="" selected disabled>Select Class First</option>';
+                return;
+            }
+
+            try {
+                subSelect.innerHTML = '<option value="">Loading...</option>';
+                const response = await fetch(`api/admin/manage_taxonomy.php?action=get_category_subjects&category_id=${classId}`);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const subjects = result.data || [];
+                    if (subjects.length === 0) {
+                        subSelect.innerHTML = '<option value="" selected disabled>No subjects linked</option>';
+                    } else {
+                        subSelect.innerHTML = '<option value="" selected disabled>Select Subject</option>' +
+                            subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+                    }
+                } else {
+                    subSelect.innerHTML = '<option value="" selected disabled>Error loading</option>';
+                }
+            } catch (error) {
+                console.error(error);
+                subSelect.innerHTML = '<option value="" selected disabled>Error loading</option>';
+            }
+        }
+
+        async function handleAspirantCategoryChange(categoryId) {
+            const subSelect = document.getElementById('exam-sub');
+            if (!subSelect) return;
+
+            if (!categoryId) {
+                subSelect.innerHTML = '<option value="" selected disabled>Select Category First</option>';
+                return;
+            }
+
+            try {
+                subSelect.innerHTML = '<option value="">Loading...</option>';
+                const response = await fetch(`api/admin/manage_taxonomy.php?action=get_category_subjects&category_id=${categoryId}`);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const subjects = result.data || [];
+                    if (subjects.length === 0) {
+                        subSelect.innerHTML = '<option value="" selected disabled>No subjects linked</option>';
+                    } else {
+                        subSelect.innerHTML = '<option value="" selected disabled>Select Subject</option>' +
+                            subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+                    }
+                } else {
+                    subSelect.innerHTML = '<option value="" selected disabled>Error loading</option>';
+                }
+            } catch (error) {
+                console.error(error);
+                subSelect.innerHTML = '<option value="" selected disabled>Error loading</option>';
+            }
+        }
+
+        updateUI();
+    </script>
+</body>
+
+</html>

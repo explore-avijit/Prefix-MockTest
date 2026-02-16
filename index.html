@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prefix - Smart Practice for Competitive Exams</title>
+    <meta name="description"
+        content="Ace your WBCS, WB Police, and other competitive exams with Prefix. Smart mock tests, detailed analytics, and expert guidance.">
+
+    <!-- Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+
+    <!-- Main CSS -->
+    <!-- Using Tailwind CDN for immediate preview. Run 'npx tailwindcss -i ./src/input.css -o ./dist/output.css' for production build -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        indigo: {
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        },
+                        slate: {
+                            950: '#020617',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out infinite 3s',
+                        'fade-up': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'scale-in': 'scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'blob': 'blob 7s infinite',
+                        'slide-left': 'slideLeft 0.3s ease-out forwards',
+                        'slide-right': 'slideRight 0.3s ease-out forwards',
+                        'view-fade': 'viewFade 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        slideLeft: {
+                            '0%': { opacity: '0', transform: 'translateX(20px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        },
+                        slideRight: {
+                            '0%': { opacity: '0', transform: 'translateX(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        },
+                        viewFade: {
+                            '0%': { opacity: '0', transform: 'scale(0.98)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- <link href="./dist/output.css" rel="stylesheet"> -->
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass-card {
+            background: rgba(16, 25, 34, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .role-btn {
+            color: #334155 !important; /* slate-800 for max contrast in light mode */
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease;
+        }
+
+        .dark .role-btn {
+            color: #f1f5f9 !important; /* slate-100 for max contrast in dark mode */
+        }
+
+        .role-btn.active {
+            color: #ffffff !important;
+            z-index: 10;
+        }
+
+        .role-indicator {
+            position: absolute;
+            background-color: #4f46e5;
+            border-radius: 0.75rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            z-index: 5;
+            will-change: transform, width, height, left, top;
+        }
+
+        .input-focus:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        /* Performance Optimizations */
+        #login-modal, 
+        .role-indicator,
+        .animate-view-fade,
+        .animate-slide-left,
+        .animate-slide-right {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        .form-collapse-container {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .form-collapse-container.expanded {
+            grid-template-rows: 1fr;
+        }
+
+        .form-collapse-content {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-white text-slate-900 font-inter antialiased overflow-x-hidden selection:bg-indigo-500 selection:text-white dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+
+    <!-- Navbar -->
+    <header id="navbar"
+        class="fixed top-0 left-0 right-0 z-[100] w-full transition-all duration-300 border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 transition-all duration-300" id="nav-container">
+
+                <!-- Logo -->
+                <a href="#" class="flex-shrink-0 flex items-center gap-2 group">
+                    <div
+                        class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform duration-300">
+                        <!-- Icon Placeholder -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span
+                        class="font-outfit font-bold text-2xl tracking-tight text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Prefix</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <!-- Exams Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="flex items-center gap-1 font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors py-2">
+                            Exams
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <!-- Mega Menu / Dropdown -->
+                        <div
+                            class="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top -translate-y-2 group-hover:translate-y-0">
+                            <div
+                                class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 p-2 ring-1 ring-black/5 overflow-hidden">
+                                <div class="grid gap-1">
+                                    <h3 class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                        WB Exams</h3>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WBCS</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WB
+                                        Police (SI / Constable)</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WBPSC
+                                        Miscellaneous</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WB
+                                        Primary TET</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WB
+                                        SLST</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WB
+                                        Clerkship</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">WB
+                                        Group C & D</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classes Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="flex items-center gap-1 font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors py-2">
+                            Class
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top -translate-y-2 group-hover:translate-y-0">
+                            <div
+                                class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 p-2 ring-1 ring-black/5 overflow-hidden">
+                                <div class="grid gap-1">
+                                    <h3 class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                        School</h3>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        5</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        6</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        7</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        8</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        9</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        10</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        11</a>
+                                    <a href="#"
+                                        class="block px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-sm text-slate-700 dark:text-slate-200 hover:text-indigo-600 transition-colors">Class
+                                        12</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Link -->
+                    <a href="student_dashboard/student-dashboard.html"
+                        class="font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">Student
+                        Portal</a>
+
+                    <!-- Expert Link -->
+                    <a href="expert_dashboard/expert-dashboard.html"
+                        class="font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">Expert
+                        Portal</a>
+
+                    <!-- Blog Link -->
+                    <a href="#"
+                        class="font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">Blog</a>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="hidden md:flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle"
+                        class="relative group p-2.5 rounded-full transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        aria-label="Toggle Dark Mode">
+                        <div class="relative w-5 h-5">
+                            <!-- Sun -->
+                            <svg id="theme-toggle-light-icon"
+                                class="hidden w-5 h-5 text-slate-500 dark:text-slate-400 transition-all duration-500 group-hover:text-amber-500 group-hover:rotate-90 group-hover:scale-110"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                            <!-- Moon -->
+                            <svg id="theme-toggle-dark-icon"
+                                class="hidden w-5 h-5 text-slate-500 dark:text-slate-400 transition-all duration-500 group-hover:text-indigo-500 group-hover:-rotate-12 group-hover:scale-110"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                </path>
+                            </svg>
+                        </div>
+                    </button>
+
+                    <a href="javascript:void(0);" onclick="openLoginModal()"
+                        class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium text-sm transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 hover:-translate-y-0.5 transform">
+                        Login
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <!-- Mobile Menu Button (Animated) -->
+                <button id="mobile-menu-btn"
+                    class="md:hidden relative group w-10 h-10 flex flex-col justify-center items-center gap-1.5 focus:outline-none"
+                    aria-label="Toggle Menu">
+                    <span
+                        class="w-6 h-0.5 bg-slate-600 dark:bg-slate-300 rounded-full transition-all duration-300 ease-in-out transform group-[.active]:rotate-45 group-[.active]:translate-y-2 origin-center"></span>
+                    <span
+                        class="w-6 h-0.5 bg-slate-600 dark:bg-slate-300 rounded-full transition-all duration-300 ease-in-out group-[.active]:opacity-0"></span>
+                    <span
+                        class="w-6 h-0.5 bg-slate-600 dark:bg-slate-300 rounded-full transition-all duration-300 ease-in-out transform group-[.active]:-rotate-45 group-[.active]:-translate-y-2 origin-center"></span>
+                </button>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- Mobile Menu Panel (Moved outside Header for better Z-Index isolation) -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-white/98 dark:bg-slate-950/98 backdrop-blur-3xl border-t border-slate-100 dark:border-slate-800/50 md:hidden opacity-0 invisible transition-all duration-300 transform -translate-y-4 z-[90] overflow-y-auto">
+        <div class="flex flex-col h-full px-6 py-8 pt-24">
+            <div class="flex-1 space-y-6">
+                <!-- Mobile Exams -->
+                <div
+                    class="space-y-3 group/mobile-item mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                    <button
+                        class="flex items-center justify-between w-full text-xl font-bold text-slate-800 dark:text-slate-100 py-2 mobile-dropdown-btn">
+                        <span>Exams</span>
+                        <span
+                            class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 group-hover/mobile-item:bg-indigo-100 dark:group-hover/mobile-item:bg-indigo-900/50 group-hover/mobile-item:text-indigo-600 transition-colors">
+                            <svg class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <!-- Animated Dropdown Wrapper -->
+                    <div class="mobile-dropdown-content grid grid-rows-[0fr] transition-all duration-300 ease-out">
+                        <div class="overflow-hidden">
+                            <div class="pl-4 space-y-3 border-l-2 border-indigo-500/30 ml-1.5 py-2">
+                                <a href="#"
+                                    class="block text-base text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors hover:translate-x-1 duration-200">WBCS
+                                    Executive</a>
+                                <a href="#"
+                                    class="block text-base text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors hover:translate-x-1 duration-200">WB
+                                    Police Constable/SI</a>
+                                <a href="#"
+                                    class="block text-base text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors hover:translate-x-1 duration-200">WB
+                                    Clerkship</a>
+                                <a href="#"
+                                    class="block text-base text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors hover:translate-x-1 duration-200">Primary
+                                    TET</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Class -->
+                <div
+                    class="space-y-3 group/mobile-item mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                    <button
+                        class="flex items-center justify-between w-full text-xl font-bold text-slate-800 dark:text-slate-100 py-2 mobile-dropdown-btn">
+                        <span>School Classes</span>
+                        <span
+                            class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 group-hover/mobile-item:bg-indigo-100 dark:group-hover/mobile-item:bg-indigo-900/50 group-hover/mobile-item:text-indigo-600 transition-colors">
+                            <svg class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <!-- Animated Dropdown Wrapper -->
+                    <div class="mobile-dropdown-content grid grid-rows-[0fr] transition-all duration-300 ease-out">
+                        <div class="overflow-hidden">
+                            <div class="pl-4 space-y-3 border-l-2 border-indigo-500/30 ml-1.5 py-2">
+                                <a href="#"
+                                    class="block text-base text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors hover:translate-x-1 duration-200">Class
+                                    10 (Madhyamik)</a>
+                                <a href="#"
+                                    class="block text-base text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors hover:translate-x-1 duration-200">Class
+                                    12 (HS)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="h-px bg-slate-100 dark:bg-slate-800 my-4 mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                </div>
+
+                <a href="student_dashboard/student-dashboard.html"
+                    class="flex items-center justify-between w-full text-xl font-bold text-slate-800 dark:text-slate-100 py-2 group/link mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                    <span>Student Portal</span>
+                    <svg class="w-5 h-5 text-slate-400 group-hover/link:text-indigo-500 group-hover/link:translate-x-1 transition-all"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+
+                <a href="expert_dashboard/expert-dashboard.html"
+                    class="flex items-center justify-between w-full text-xl font-bold text-slate-800 dark:text-slate-100 py-2 group/link mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                    <span>Expert Portal</span>
+                    <svg class="w-5 h-5 text-slate-400 group-hover/link:text-indigo-500 group-hover/link:translate-x-1 transition-all"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+
+                <a href="#"
+                    class="flex items-center justify-between w-full text-xl font-bold text-slate-800 dark:text-slate-100 py-2 group/link mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                    <span>Blog</span>
+                    <svg class="w-5 h-5 text-slate-400 group-hover/link:text-indigo-500 group-hover/link:translate-x-1 transition-all"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div
+                class="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800 mobile-item-animate opacity-0 translate-y-4 transition-all duration-500 ease-out">
+                <button id="mobile-theme-toggle"
+                    class="flex items-center justify-center gap-3 w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold mb-4 active:scale-95 transition-transform">
+                    <span class="dark:hidden flex items-center gap-2"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                            </path>
+                        </svg> Dark Mode</span>
+                    <span class="hidden dark:flex items-center gap-2"><svg class="w-5 h-5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
+                        </svg> Light Mode</span>
+                </button>
+
+                <a href="javascript:void(0);" onclick="openLoginModal()"
+                    class="block w-full py-4 rounded-xl bg-indigo-600 text-white font-bold text-center shadow-lg shadow-indigo-500/20 active:scale-95 transition-all">
+                    Login / Sign Up
+                </a>
+            </div>
+        </div>
+    </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="overflow-hidden">
+        <!-- Hero Section -->
+        <main class="overflow-hidden">
+            <!-- Main section: Increased top padding (pt-32/lg:pt-48) for definitive navbar clearance -->
+            <section
+                class="relative min-h-[90vh] flex items-center pt-32 pb-20 lg:pt-40 lg:pb-32 bg-white dark:bg-slate-950 transition-colors duration-300">
+
+                <!-- Static Zen Background -->
+                <div class="absolute inset-0 pointer-events-none z-0">
+                    <!-- Moved blob down to 15% to clear navbar area completely -->
+                    <div
+                        class="absolute top-[15%] right-[5%] w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[100px] dark:bg-indigo-500/20 mix-blend-multiply dark:mix-blend-screen">
+                    </div>
+                    <div
+                        class="absolute bottom-[10%] left-[5%] w-[500px] h-[500px] bg-violet-500/10 rounded-full blur-[100px] dark:bg-violet-500/20 mix-blend-multiply dark:mix-blend-screen">
+                    </div>
+                    <div
+                        class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:32px_32px]">
+                    </div>
+                </div>
+
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+
+                        <!-- Content (Left - 50%) -->
+                        <div class="lg:w-1/2 space-y-8 text-center lg:text-left">
+
+                            <!-- Badge -->
+                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 backdrop-blur-sm shadow-sm opacity-0 animate-fade-up"
+                                style="animation-delay: 0ms;">
+                                <span class="relative flex h-2 w-2">
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                                </span>
+                                <span
+                                    class="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wide">#1
+                                    WB Exam Prep</span>
+                            </div>
+
+                            <!-- Headline -->
+                            <h1 class="text-5xl lg:text-5xl font-outfit font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1] opacity-0 animate-fade-up"
+                                style="animation-delay: 100ms;">
+                                Master Exams with <br />
+                                <span
+                                    class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600">Smart
+                                    Practice.</span>
+                            </h1>
+
+                            <!-- Subheading -->
+                            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed opacity-0 animate-fade-up"
+                                style="animation-delay: 200ms;">
+                                Join thousands of aspirants acing WBCS, Police, and TET exams. Get AI-driven analytics,
+                                adaptive mock tests, and real-time performance tracking.
+                            </p>
+
+                            <!-- CTAs -->
+                            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 opacity-0 animate-fade-up"
+                                style="animation-delay: 300ms;">
+                                <a href="student_dashboard/mock-test.html"
+                                    class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-lg transition-all hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/20 active:scale-95 flex items-center justify-center gap-2">
+                                    Start Practicing Free
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                    </svg>
+                                </a>
+                                <a href="#"
+                                    class="group w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-lg hover:border-indigo-500/30 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5 text-indigo-500 transition-transform group-hover:scale-110"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                                        </path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Watch Demo
+                                </a>
+                            </div>
+
+                            <!-- Trust Strip -->
+                            <div class="pt-8 flex items-center justify-center lg:justify-start gap-8 opacity-0 animate-fade-up"
+                                style="animation-delay: 400ms;">
+                                <div class="flex -space-x-3">
+                                    <img class="w-10 h-10 rounded-full border-2 border-white dark:border-slate-950"
+                                        src="https://i.pravatar.cc/100?img=11" alt="User" />
+                                    <img class="w-10 h-10 rounded-full border-2 border-white dark:border-slate-950"
+                                        src="https://i.pravatar.cc/100?img=12" alt="User" />
+                                    <img class="w-10 h-10 rounded-full border-2 border-white dark:border-slate-950"
+                                        src="https://i.pravatar.cc/100?img=33" alt="User" />
+                                    <div
+                                        class="w-10 h-10 rounded-full border-2 border-white dark:border-slate-950 bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300">
+                                        +2k</div>
+                                </div>
+                                <div class="text-sm font-medium text-slate-500 dark:text-slate-400">
+                                    Trusted by <span class="text-slate-900 dark:text-white font-bold">2,000+</span>
+                                    aspirants
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual (Right - 50%) -->
+                        <div class="lg:w-1/2 relative opacity-0 animate-scale-in" style="animation-delay: 500ms;">
+                            <!-- Main Glass Card (Stable, No Rotation) -->
+                            <div
+                                class="relative z-10 bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl shadow-indigo-500/10 border border-slate-200/60 dark:border-slate-800 p-2">
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-950 rounded-[2rem] overflow-hidden relative aspect-auto md:aspect-[4/3] border border-slate-100 dark:border-slate-800 flex flex-col justify-center pt-14">
+                                    <!-- Fake UI Header - Z-Index Fix -->
+                                    <div
+                                        class="absolute top-0 inset-x-0 h-14 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-6 z-20">
+                                        <div class="flex gap-2">
+                                            <div class="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                                            <div class="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                                            <div class="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                                        </div>
+                                        <div class="h-2 w-24 bg-slate-100 dark:bg-slate-800 rounded-full"></div>
+                                    </div>
+
+                                    <!-- Fake UI Content -->
+                                    <div class="p-4 md:p-6 grid grid-cols-2 gap-4 relative z-10 h-auto">
+                                        <!-- Active Test Card (Live Contest Logic) -->
+                                        <div
+                                            class="col-span-2 bg-indigo-50 dark:bg-slate-800/50 rounded-2xl border border-indigo-100 dark:border-slate-700/50 p-5 relative overflow-hidden group">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div>
+                                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white">WBCS
+                                                        Prelims Full Mock</h4>
+                                                    <div class="flex items-center gap-2 mt-1">
+                                                        <span class="flex h-2 w-2 relative">
+                                                            <span
+                                                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                                            <span
+                                                                class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                                                        </span>
+                                                        <p
+                                                            class="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                                                            1,248 Students Live</p>
+                                                    </div>
+                                                </div>
+                                                <span
+                                                    class="px-2 py-1 rounded-md bg-white dark:bg-slate-700 border border-indigo-100 dark:border-slate-600 text-rose-600 dark:text-rose-400 text-[10px] font-bold uppercase tracking-wide shadow-sm">Ends
+                                                    in 2h</span>
+                                            </div>
+                                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mb-2">
+                                                <div
+                                                    class="bg-gradient-to-r from-indigo-500 to-violet-500 h-1.5 rounded-full w-[45%] group-hover:w-[55%] transition-all duration-1000 ease-out">
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                                                <span>Top Ranker: <span class="text-slate-900 dark:text-white">Avijit
+                                                        Bag</span>/1248 Aspirants</span>
+                                                <span
+                                                    class="text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform cursor-pointer">Join
+                                                    Now →</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Exam Info Card (Red Box Fix) -->
+                                        <div
+                                            class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700/50 p-4 flex flex-col justify-between group hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div
+                                                    class="w-8 h-8 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                                        </path>
+                                                    </svg>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 px-1.5 py-0.5 rounded">Full
+                                                    Marks: 60</span>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">
+                                                    Total Questions</div>
+                                                <div class="flex items-end gap-2">
+                                                    <div
+                                                        class="text-xl font-bold text-slate-900 dark:text-white leading-none">
+                                                        60</div>
+                                                    <div
+                                                        class="text-[10px] font-medium text-slate-400 flex items-center gap-1 mb-0.5">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                        60 Mins
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Timer Card (Green Box Fix) -->
+                                        <div
+                                            class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700/50 p-4 flex flex-col justify-between group hover:border-amber-200 dark:hover:border-amber-800 transition-colors">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div
+                                                    class="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-1.5 py-0.5 rounded animate-pulse">Starts
+                                                    Soon</span>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mb-0.5">
+                                                    Next Mock Session</div>
+                                                <div
+                                                    class="text-xl font-mono font-bold text-slate-900 dark:text-white tracking-wider">
+                                                    04:25<span
+                                                        class="text-xs text-slate-400 font-sans font-medium ml-1">s</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Floating Badge 1 (Accuracy) -->
+                            <div
+                                class="absolute -right-4 top-24 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 animate-float">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-green-500/30">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                                d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                                            Accuracy</p>
+                                        <p class="text-xl font-bold text-slate-900 dark:text-white">98%</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Floating Badge 2 (Questions) -->
+                            <div
+                                class="absolute -left-4 bottom-20 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 animate-float-delayed">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                                        <span class="font-bold text-sm">5k+</span>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                                            Questions</p>
+                                        <p class="text-xl font-bold text-slate-900 dark:text-white">Daily</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Exam Categories Section (Segmented) -->
+        <section class="py-20 bg-white dark:bg-slate-950">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Fix: items-center for mobile (center), md:items-end for desktop (bottom alignment) -->
+                <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-6">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-indigo-600 dark:text-indigo-400 font-bold tracking-wide uppercase text-sm mb-3">
+                            Choose Your Goal</h2>
+                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white">Prepare for <span
+                                class="text-slate-500 dark:text-slate-400">Board & Job Exams</span></h3>
+                    </div>
+
+                    <!-- Toggle Switch -->
+                    <div class="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-xl inline-flex relative isolate">
+                        <!-- Gliding Background -->
+                        <div id="tab-glider"
+                            class="absolute top-1.5 left-1.5 w-[calc(50%-6px)] h-[calc(100%-12px)] bg-white dark:bg-slate-700 rounded-lg shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] z-0">
+                        </div>
+
+                        <button onclick="switchTab('competitive')" id="btn-competitive"
+                            class="relative z-10 px-8 py-2.5 rounded-lg text-sm font-bold text-slate-900 dark:text-white transition-colors duration-300 w-40 cursor-pointer">Competitive</button>
+                        <button onclick="switchTab('school')" id="btn-school"
+                            class="relative z-10 px-8 py-2.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors duration-300 w-40 cursor-pointer">Class
+                            5-12</button>
+                    </div>
+                </div>
+
+                <!-- Categories Grid Container (Fixed Overlap Issue using Grid Stacking) -->
+                <div class="grid grid-cols-1">
+
+                    <!-- CONTENT: Competitive (Default Active) -->
+                    <div id="content-competitive"
+                        class="col-start-1 row-start-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 transition-all duration-500 ease-out opacity-100 scale-100 z-10">
+                        <!-- WBCS -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                🏛️</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">WBCS</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Prelims & Mains</p>
+                        </a>
+                        <!-- Police -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                👮</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">WB Police</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">SI & Constable</p>
+                        </a>
+                        <!-- TET -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                🎓</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Primary TET</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Full Guidance</p>
+                        </a>
+                        <!-- Rail -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                🚂</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Railways</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">NTPC & Group D</p>
+                        </a>
+                        <!-- Clerkship -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                📝</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Clerkship</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">PSC Exams</p>
+                        </a>
+                        <!-- General -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-indigo-600 shadow-sm flex items-center justify-center text-white text-xl mb-3 group-hover:scale-110 transition-transform">
+                                ➔</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">All Exams</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">View Full List</p>
+                        </a>
+                    </div>
+
+                    <!-- CONTENT: School (Hidden by Default) -->
+                    <div id="content-school"
+                        class="col-start-1 row-start-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 transition-all duration-500 ease-out opacity-0 scale-95 pointer-events-none w-full">
+                        <!-- Class 10 -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                📚</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Class 10</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Madhyamik Prep</p>
+                        </a>
+                        <!-- Class 12 Science -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                🧬</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">12 Science</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">WBCHSE & JEE</p>
+                        </a>
+                        <!-- Class 12 Arts -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                🎨</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">12 Arts</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">History, Geo, Pol</p>
+                        </a>
+                        <!-- Class 12 Commerce -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                📊</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">12 Commerce</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Accountancy</p>
+                        </a>
+                        <!-- Scholarship -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                🏆</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Scholarship</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">NMMS & More</p>
+                        </a>
+                        <!-- All Classes -->
+                        <a href="#"
+                            class="group bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+                            <div
+                                class="w-12 h-12 rounded-full bg-emerald-600 shadow-sm flex items-center justify-center text-white text-xl mb-3 group-hover:scale-110 transition-transform">
+                                ➔</div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">All Classes</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Class 5 to 12</p>
+                        </a>
+                    </div>
+
+                </div>
+
+                <script>
+                    function switchTab(type) {
+                        const glider = document.getElementById('tab-glider');
+                        const btnComp = document.getElementById('btn-competitive');
+                        const btnSchool = document.getElementById('btn-school');
+                        const contentComp = document.getElementById('content-competitive');
+                        const contentSchool = document.getElementById('content-school');
+
+                        if (type === 'competitive') {
+                            // Glider Move
+                            glider.style.transform = 'translateX(0)';
+
+                            // Button Styles
+                            btnComp.classList.add('font-bold', 'text-slate-900', 'dark:text-white');
+                            btnComp.classList.remove('font-medium', 'text-slate-500', 'dark:text-slate-400');
+
+                            btnSchool.classList.add('font-medium', 'text-slate-500', 'dark:text-slate-400');
+                            btnSchool.classList.remove('font-bold', 'text-slate-900', 'dark:text-white');
+
+                            // Content Visibility
+                            contentComp.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                            contentComp.classList.add('opacity-100', 'scale-100', 'z-10');
+
+                            contentSchool.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                            contentSchool.classList.remove('opacity-100', 'scale-100', 'z-10');
+
+                        } else {
+                            // Glider Move
+                            glider.style.transform = 'translateX(100%)';
+
+                            // Button Styles
+                            btnSchool.classList.add('font-bold', 'text-slate-900', 'dark:text-white');
+                            btnSchool.classList.remove('font-medium', 'text-slate-500', 'dark:text-slate-400');
+
+                            btnComp.classList.add('font-medium', 'text-slate-500', 'dark:text-slate-400');
+                            btnComp.classList.remove('font-bold', 'text-slate-900', 'dark:text-white');
+
+                            // Content Visibility
+                            contentSchool.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                            contentSchool.classList.add('opacity-100', 'scale-100', 'z-10');
+
+                            contentComp.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                            contentComp.classList.remove('opacity-100', 'scale-100', 'z-10');
+                        }
+                    }
+                </script>
+            </div>
+        </section>
+
+        <!-- Live Tests Section -->
+        <section class="py-24 bg-slate-50 dark:bg-slate-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 text-center sm:text-left">
+                    <div class="space-y-1">
+                        <span
+                            class="px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider inline-block">Happening
+                            Now</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Live Mock Tests</h2>
+                    </div>
+                    <a href="#"
+                        class="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-semibold hover:gap-2 transition-all gap-1 text-sm md:text-base">
+                        View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Live Test Card 1 -->
+                    <div
+                        class="bg-white dark:bg-slate-950 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/30 transition-all group relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-6">
+                            <span class="flex h-3 w-3 relative">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-3xl">
+                                🚔</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">WB Police Constable</h3>
+                                <p class="text-slate-500 dark:text-slate-400 text-sm">Full Length Mock Test #04</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                                <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">85</div>
+                                <div class="text-[10px] uppercase text-slate-500 font-bold">Questions</div>
+                            </div>
+                            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                                <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">60m</div>
+                                <div class="text-[10px] uppercase text-slate-500 font-bold">Time</div>
+                            </div>
+                            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                                <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">1.2k</div>
+                                <div class="text-[10px] uppercase text-slate-500 font-bold">Joined</div>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-colors shadow-lg shadow-indigo-500/25">Attempt
+                            Now</button>
+                    </div>
+
+                    <!-- Live Test Card 2 -->
+                    <div
+                        class="bg-white dark:bg-slate-950 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/30 transition-all group relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-6">
+                            <span class="flex h-3 w-3 relative">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-3xl">
+                                🧪</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Class 10 Science</h3>
+                                <p class="text-slate-500 dark:text-slate-400 text-sm">Chapter: Light & Physics</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                                <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">25</div>
+                                <div class="text-[10px] uppercase text-slate-500 font-bold">Questions</div>
+                            </div>
+                            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                                <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">20m</div>
+                                <div class="text-[10px] uppercase text-slate-500 font-bold">Time</div>
+                            </div>
+                            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                                <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">850</div>
+                                <div class="text-[10px] uppercase text-slate-500 font-bold">Joined</div>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-colors shadow-lg shadow-indigo-500/25">Attempt
+                            Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experts Section (Owl Carousel Style) -->
+        <section id="experts" class="py-24 bg-white dark:bg-slate-950 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+                <div
+                    class="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-4 text-center md:text-left">
+                    <div>
+                        <h2 class="text-indigo-600 dark:text-indigo-400 font-bold tracking-wide uppercase text-sm mb-3">
+                            Learn from Masters</h2>
+                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white">Our Top <span
+                                class="text-slate-500 dark:text-slate-400">Experts</span></h3>
+                    </div>
+                </div>
+
+                <!-- Carousel Wrapper -->
+                <div class="relative group/carousel">
+
+                    <!-- Navigation Button: Prev -->
+                    <button id="expert-prev"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-slate-900/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-indigo-600 hover:border-indigo-500 hover:scale-110 transition-all disabled:opacity-0 disabled:cursor-not-allowed hidden md:flex">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <!-- Navigation Button: Next -->
+                    <button id="expert-next"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-slate-900/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-indigo-600 hover:border-indigo-500 hover:scale-110 transition-all hidden md:flex">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <!-- Carousel Container -->
+                    <div id="experts-carousel"
+                        class="flex gap-8 overflow-x-auto snap-x snap-mandatory px-4 md:px-20 py-12 scroll-smooth hide-scrollbar">
+
+                        <!-- Expert Card 1 -->
+                        <div
+                            class="min-w-full md:min-w-[calc(33.333%-22px)] snap-center group relative transform transition-all hover:-translate-y-2 duration-300">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/20 to-purple-500/0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-lg transition duration-500">
+                            </div>
+                            <div
+                                class="relative h-[400px] rounded-[2rem] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl">
+                                <!-- Image -->
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800"
+                                    alt="Expert"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                                </div>
+
+                                <!-- Badges -->
+                                <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider shadow-sm mr-2">Maths
+                                        Wizard</span>
+                                    <span
+                                        class="px-2 py-1.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/20 text-amber-400 text-xs flex items-center gap-1 font-bold">
+                                        <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
+                                        </svg>
+                                        4.9
+                                    </span>
+                                </div>
+
+                                <!-- Content -->
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <h4
+                                        class="text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-indigo-400 transition-colors">
+                                        Priya Dutta</h4>
+                                    <p
+                                        class="text-base text-slate-300 mb-6 font-medium border-l-2 border-indigo-500 pl-3">
+                                        ex-WBCS Officer • 8+ Years</p>
+
+                                    <div
+                                        class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 delay-100">
+                                        <div class="text-center">
+                                            <p class="text-xs text-slate-400 uppercase tracking-widest mb-1">Students
+                                            </p>
+                                            <p class="text-lg font-bold text-white">15k+</p>
+                                        </div>
+                                        <button
+                                            class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expert Card 2 -->
+                        <div
+                            class="min-w-full md:min-w-[calc(33.333%-22px)] snap-center group relative transform transition-all hover:-translate-y-2 duration-300">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/20 to-purple-500/0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-lg transition duration-500">
+                            </div>
+                            <div
+                                class="relative h-[400px] rounded-[2rem] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=800"
+                                    alt="Expert"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                                </div>
+
+                                <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider shadow-sm mr-2">Reasoning</span>
+                                    <span
+                                        class="px-2 py-1.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/20 text-amber-400 text-xs flex items-center gap-1 font-bold">
+                                        <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
+                                        </svg>
+                                        4.8
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <h4
+                                        class="text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-indigo-400 transition-colors">
+                                        Amit Roy</h4>
+                                    <p
+                                        class="text-base text-slate-300 mb-6 font-medium border-l-2 border-indigo-500 pl-3">
+                                        GATE Topper • 6+ Years</p>
+
+                                    <div
+                                        class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 delay-100">
+                                        <div class="text-center">
+                                            <p class="text-xs text-slate-400 uppercase tracking-widest mb-1">Students
+                                            </p>
+                                            <p class="text-lg font-bold text-white">12k+</p>
+                                        </div>
+                                        <button
+                                            class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expert Card 3 -->
+                        <div
+                            class="min-w-full md:min-w-[calc(33.333%-22px)] snap-center group relative transform transition-all hover:-translate-y-2 duration-300">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/20 to-purple-500/0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-lg transition duration-500">
+                            </div>
+                            <div
+                                class="relative h-[400px] rounded-[2rem] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800"
+                                    alt="Expert"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                                </div>
+
+                                <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider shadow-sm mr-2">English</span>
+                                    <span
+                                        class="px-2 py-1.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/20 text-amber-400 text-xs flex items-center gap-1 font-bold">
+                                        <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
+                                        </svg>
+                                        4.9
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <h4
+                                        class="text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-indigo-400 transition-colors">
+                                        Sneha Das</h4>
+                                    <p
+                                        class="text-base text-slate-300 mb-6 font-medium border-l-2 border-indigo-500 pl-3">
+                                        M.A. English • 5+ Years</p>
+
+                                    <div
+                                        class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 delay-100">
+                                        <div class="text-center">
+                                            <p class="text-xs text-slate-400 uppercase tracking-widest mb-1">Students
+                                            </p>
+                                            <p class="text-lg font-bold text-white">8k+</p>
+                                        </div>
+                                        <button
+                                            class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expert Card 4 -->
+                        <div
+                            class="min-w-full md:min-w-[calc(33.333%-22px)] snap-center group relative transform transition-all hover:-translate-y-2 duration-300">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/20 to-purple-500/0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-lg transition duration-500">
+                            </div>
+                            <div
+                                class="relative h-[400px] rounded-[2rem] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600"
+                                    alt="Expert"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                                </div>
+
+                                <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider shadow-sm mr-2">General
+                                        Awareness</span>
+                                    <span
+                                        class="px-2 py-1.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/20 text-amber-400 text-xs flex items-center gap-1 font-bold">
+                                        <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
+                                        </svg>
+                                        4.7
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <h4
+                                        class="text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-indigo-400 transition-colors">
+                                        Rohan Sen</h4>
+                                    <p
+                                        class="text-base text-slate-300 mb-6 font-medium border-l-2 border-indigo-500 pl-3">
+                                        Railway Expert • 7+ Years</p>
+
+                                    <div
+                                        class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 delay-100">
+                                        <div class="text-center">
+                                            <p class="text-xs text-slate-400 uppercase tracking-widest mb-1">Students
+                                            </p>
+                                            <p class="text-lg font-bold text-white">10k+</p>
+                                        </div>
+                                        <button
+                                            class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expert Card 5 -->
+                        <div
+                            class="min-w-full md:min-w-[calc(33.333%-22px)] snap-center group relative transform transition-all hover:-translate-y-2 duration-300">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/20 to-purple-500/0 rounded-[2.5rem] opacity-0 group-hover:opacity-100 blur-lg transition duration-500">
+                            </div>
+                            <div
+                                class="relative h-[400px] rounded-[2rem] overflow-hidden bg-slate-900 border border-white/5 shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1558222218-b7b54eede3f3?auto=format&fit=crop&q=80&w=800"
+                                    alt="Expert"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                                </div>
+
+                                <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold uppercase tracking-wider shadow-sm mr-2">Science</span>
+                                    <span
+                                        class="px-2 py-1.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/20 text-amber-400 text-xs flex items-center gap-1 font-bold">
+                                        <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
+                                        </svg>
+                                        5.0
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <h4
+                                        class="text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-indigo-400 transition-colors">
+                                        Dr. S. K. Bose</h4>
+                                    <p
+                                        class="text-base text-slate-300 mb-6 font-medium border-l-2 border-indigo-500 pl-3">
+                                        PhD Physics • 12+ Years</p>
+
+                                    <div
+                                        class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 delay-100">
+                                        <div class="text-center">
+                                            <p class="text-xs text-slate-400 uppercase tracking-widest mb-1">Students
+                                            </p>
+                                            <p class="text-lg font-bold text-white">5.2k+</p>
+                                        </div>
+                                        <button
+                                            class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Dots Pagination -->
+                    <div id="expert-dots" class="flex justify-center gap-2 mt-8">
+                        <!-- Dots will be generated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-20 relative overflow-hidden">
+            <div class="absolute inset-0 bg-indigo-600 dark:bg-indigo-900">
+                <div
+                    class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff1a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff1a_1px,transparent_1px)] bg-[size:24px_24px]">
+                </div>
+                <!-- Blobs -->
+                <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-violet-500/30 rounded-full blur-[100px]">
+                </div>
+                <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-400/30 rounded-full blur-[100px]">
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Ready to top the leaderboard?</h2>
+                <p class="text-lg text-indigo-100 mb-10 max-w-2xl mx-auto">Join 50,000+ students from West Bengal who
+                    are already preparing smarter with Prefix.</p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="javascript:void(0);" onclick="openLoginModal()"
+                        class="px-8 py-4 rounded-xl bg-white text-indigo-600 font-bold text-lg hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                        Get Started Free <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                    <button
+                        class="px-8 py-4 rounded-xl bg-indigo-700/50 text-white font-bold text-lg border border-indigo-500/50 hover:bg-indigo-700 transition-all">
+                        Download App
+                    </button>
+                </div>
+                <p class="mt-6 text-sm text-indigo-200 opacity-80">No credit card required • Free mock tests available
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 pt-16 pb-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                    <!-- Col 1: Prefix Info (Centered) -->
+                    <div class="col-span-2 md:col-span-1 flex flex-col items-center text-center">
+                        <a href="#" class="flex items-center justify-center gap-2 mb-6">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">
+                                P</div>
+                            <span class="text-xl font-bold text-slate-900 dark:text-white">Prefix</span>
+                        </a>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            West Bengal's #1 Mock Test platform for School and Competitive Exams.
+                        </p>
+                        <div class="flex justify-center gap-4">
+                            <a href="#"
+                                class="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm transition-colors">𝕏</a>
+                            <a href="#"
+                                class="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm transition-colors">in</a>
+                            <a href="#"
+                                class="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm transition-colors">fb</a>
+                        </div>
+                    </div>
+
+                    <!-- Col 2: Exams (Centered) -->
+                    <div class="text-center">
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-6">Exams</h4>
+                        <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">WBCS</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">WB
+                                    Police</a></li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Primary
+                                    TET</a></li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Railways</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Class 10
+                                    & 12</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 3: Company (Centered) -->
+                    <div class="text-center">
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-6">Company</h4>
+                        <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About
+                                    Us</a></li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Success
+                                    Stories</a></li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Careers</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy
+                                    Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 4: Resources (Centered) -->
+                    <div class="text-center">
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-6">Resources</h4>
+                        <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Previous
+                                    Year Papers</a></li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Exam
+                                    Notifications</a></li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Study
+                                    Materials</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 5: Support (Centered) -->
+                    <div class="text-center">
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-6">Support</h4>
+                        <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Help
+                                    Center</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Community</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Report
+                                    Issue</a>
+                            </li>
+                            <li><a href="expert_dashboard/expert-dashboard.html"
+                                    class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline transition-colors">Expert
+                                    Portal</a>
+                            </li>
+                            <li><a href="#"
+                                    class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms &
+                                    Conditions</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-200 dark:border-slate-800 pt-8 text-center">
+                    <p class="text-sm text-slate-500 dark:text-slate-400">© 2026 Prefix EdTech. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm" onclick="closeLoginModal()">
+            </div>
+
+            <!-- Modal Content -->
+            <div class="max-w-[480px] w-full relative z-10 animate-scale-in">
+                <!-- Card -->
+                <div
+                    class="glass-card rounded-[2.5rem] p-4 md:p-6 shadow-2xl relative overflow-hidden group border border-white/20 dark:border-white/10">
+                    <!-- Close Button -->
+                    <button onclick="closeLoginModal()"
+                        class="absolute right-6 top-6 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors z-20">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+
+                    <!-- Internal Glow -->
+                    <div
+                        class="absolute -top-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                    </div>
+
+                    <div class="relative z-10">
+                        <div class="text-center mb-3">
+                            <div class="inline-flex items-center gap-3 mb-1">
+                                <div
+                                    class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-xl shadow-indigo-500/40">
+                                    <span class="material-symbols-outlined text-xl">diamond</span>
+                                </div>
+                                <h2
+                                    class="text-2xl font-extrabold tracking-tighter dark:text-white uppercase font-outfit">
+                                    Prefix</h2>
+                            </div>
+                            <h3 id="modal-title" class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+                                Welcome Back</h3>
+                            <p id="modal-subtitle"
+                                class="text-xs text-slate-700 dark:text-slate-200 mt-1 font-bold">Enter your
+                                details to continue</p>
+                        </div>
+
+                        <!-- Role Switcher -->
+                        <div id="role-switcher"
+                            class="relative grid grid-cols-3 gap-2 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-2xl mb-3 border border-slate-200 dark:border-white/5 transition-all duration-500 ease-in-out">
+                            <!-- Sliding Indicator -->
+                            <div id="role-pill" class="role-indicator"></div>
+
+                            <button type="button" onclick="switchRole('aspirant', this)"
+                                class="role-btn relative active flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+                                <span class="material-symbols-outlined text-base">person</span>
+                                <span>Aspirant</span>
+                            </button>
+                            <button type="button" onclick="switchRole('expert', this)"
+                                class="role-btn relative flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+                                <span class="material-symbols-outlined text-base">school</span>
+                                <span>Expert</span>
+                            </button>
+                            <div id="admin-login-wrapper"
+                                class="relative flex transition-all duration-500 overflow-hidden">
+                                <button type="button" id="admin-login-btn" onclick="switchRole('admin', this)"
+                                    class="role-btn w-full flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+                                    <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+                                    <span>Admin</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="modal-container" class="relative">
+                            <form id="loginForm" class="space-y-2">
+                                <!-- Dynamic Role Hint -->
+                                <div id="role-hint"
+                                    class="text-center py-2.5 px-4 rounded-full bg-indigo-100 dark:bg-indigo-500/20 border-2 border-indigo-200 dark:border-indigo-500/30 mb-3 shadow-inner">
+                                    <p class="text-[10px] font-black uppercase text-indigo-900 dark:text-indigo-200 tracking-[0.2em] flex items-center justify-center gap-2">
+                                        <span id="action-text">LOGGING IN AS</span> 
+                                        <span id="current-role" class="bg-indigo-600 text-white px-3 py-1 rounded-lg shadow-md border border-white/20">ASPIRANT</span>
+                                    </p>
+                                </div>
+
+                                <!-- Login View -->
+                                <div id="login-view" class="space-y-3 animate-view-fade">
+                                    <!-- Step 1: Email Input -->
+                                    <div id="email-step" class="space-y-3 animate-slide-left">
+                                        <div class="space-y-1">
+                                            <label
+                                                class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider ml-1">Email
+                                                Address</label>
+                                            <div class="relative group">
+                                                <span
+                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">mail</span>
+                                                <input type="email" id="login-email" placeholder="name@example.com"
+                                                    class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" onclick="sendOTP()"
+                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-2xl font-bold uppercase tracking-widest shadow-xl shadow-indigo-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs">
+                                            Get OTP
+                                            <span class="material-symbols-outlined text-sm">send</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Step 2: OTP Input -->
+                                    <div id="otp-step" class="space-y-3 hidden">
+                                        <div class="space-y-1">
+                                            <div class="flex justify-between items-center ml-1">
+                                                <label
+                                                    class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider">Enter
+                                                    4-Digit OTP</label>
+                                                <button type="button" onclick="resendOTP()"
+                                                    class="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline uppercase">Resend</button>
+                                            </div>
+                                            <div class="relative group">
+                                                <span
+                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">pin</span>
+                                                <input type="text" id="login-otp" maxlength="4" placeholder="0 0 0 0"
+                                                    class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus tracking-[1em] text-center font-bold placeholder:text-slate-400 dark:placeholder:text-slate-500">
+                                            </div>
+                                            <p class="text-[11px] text-slate-700 dark:text-slate-300 text-center font-bold mt-1">OTP sent to your email</p>
+                                        </div>
+
+                                        <button type="submit"
+                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-2xl font-bold uppercase tracking-widest shadow-xl shadow-indigo-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs">
+                                            Verify & Login
+                                            <span class="material-symbols-outlined text-sm">verified_user</span>
+                                        </button>
+
+                                        <button type="button" onclick="backToEmail()"
+                                            class="w-full text-[10px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors uppercase tracking-widest">Change
+                                            Email</button>
+                                    </div>
+                                </div>
+
+                                <!-- Signup View (Hidden by default) -->
+                                <div id="signup-view" class="space-y-2 animate-view-fade hidden">
+                                    <div id="signup-fields-step" class="space-y-3">
+                                        <div class="space-y-3">
+                                            <!-- Full Name -->
+                                            <div class="space-y-1">
+                                                <label
+                                                    class="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-widest ml-1">Full
+                                                    Name *</label>
+                                                <div class="relative group">
+                                                    <span
+                                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">person</span>
+                                                    <input type="text" id="signup-name" placeholder="John Doe"
+                                                        class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                                                        required>
+                                                </div>
+                                            </div>
+    
+                                            <!-- Email & Phone Grid -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                <div class="space-y-1">
+                                                    <label
+                                                        class="text-[9px] font-bold uppercase text-slate-500 dark:text-slate-400 tracking-widest ml-1">Email
+                                                        *</label>
+                                                    <div class="relative group">
+                                                        <span
+                                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">mail</span>
+                                                        <input type="email" id="signup-email" placeholder="john@example.com"
+                                                            class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                                <div class="space-y-1">
+                                                    <label
+                                                        class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider ml-1">Phone
+                                                        Number</label>
+                                                    <div class="relative group">
+                                                        <span
+                                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">call</span>
+                                                        <input type="tel" id="signup-phone" placeholder="+91 00000 00000"
+                                                            class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-600">
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <!-- Dynamic Role Fields Wrapper -->
+                                            <div class="space-y-2">
+                                                <!-- Role Specific: Aspirant -->
+                                                <div id="aspirant-fields-container"
+                                                    class="form-collapse-container expanded">
+                                                    <div class="form-collapse-content">
+                                                        <div id="aspirant-fields" class="space-y-1">
+                                                            <label
+                                                                class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider ml-1">Academic
+                                                                Role *</label>
+                                                            <div class="relative group">
+                                                                <span
+                                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">history_edu</span>
+                                                                <select id="signup-academic-role"
+                                                                    class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus appearance-none cursor-pointer">
+                                                                    <option value="student" class="dark:bg-slate-900">Student</option>
+                                                                    <option value="aspirant" class="dark:bg-slate-900">Aspirant</option>
+                                                                </select>
+                                                                <span
+                                                                    class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm group-focus-within:text-indigo-500">expand_more</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <!-- Role Specific: Expert -->
+                                                <div id="expert-fields-container" class="form-collapse-container">
+                                                    <div class="form-collapse-content">
+                                                        <div class="space-y-2">
+                                                            <div id="expert-fields" class="space-y-1">
+                                                                <label
+                                                                    class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider ml-1">Highest
+                                                                    Degree *</label>
+                                                                <div class="relative group">
+                                                                    <span
+                                                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">workspace_premium</span>
+                                                                    <input type="text" id="signup-degree"
+                                                                        placeholder="PhD, M.Tech, etc"
+                                                                        class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-500">
+                                                                </div>
+                                                            </div>
+    
+                                                            <div id="expert-extra-fields"
+                                                                class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                                <div class="space-y-1">
+                                                                    <label
+                                                                        class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider ml-1">Profession</label>
+                                                                    <div class="relative group">
+                                                                        <span
+                                                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">work</span>
+                                                                        <input type="text" id="signup-profession"
+                                                                            placeholder="Professor"
+                                                                            class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-500">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="space-y-1">
+                                                                    <label
+                                                                        class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider ml-1">Dept/Org</label>
+                                                                    <div class="relative group">
+                                                                        <span
+                                                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-indigo-500">corporate_fare</span>
+                                                                        <input type="text" id="signup-dept"
+                                                                            placeholder="CU, IIT, etc"
+                                                                            class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus placeholder:text-slate-400 dark:placeholder:text-slate-600">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <button type="button" onclick="initiateSignup()" id="btn-signup-init"
+                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-2xl font-bold uppercase tracking-widest shadow-xl shadow-indigo-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs mt-1">
+                                            Create Account
+                                            <span class="material-symbols-outlined text-sm">person_add</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Signup OTP Verification Step -->
+                                    <div id="signup-otp-step" class="space-y-3 hidden animate-slide-right">
+                                        <div class="space-y-1">
+                                            <div class="flex justify-between items-center ml-1">
+                                                <label class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider">Verify Email OTP</label>
+                                                <button type="button" onclick="initiateSignup()"
+                                                    class="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline uppercase">Resend</button>
+                                            </div>
+                                            <div class="relative group">
+                                                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">pin</span>
+                                                <input type="text" id="signup-otp" maxlength="4" placeholder="0 0 0 0"
+                                                    class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-2.5 pl-11 pr-6 text-sm text-slate-900 dark:text-white input-focus tracking-[1em] text-center font-bold">
+                                            </div>
+                                            <p class="text-[10px] text-slate-500 dark:text-slate-400 text-center font-medium mt-1">Check your email for the verification code</p>
+                                        </div>
+
+                                        <button type="submit"
+                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-2xl font-bold uppercase tracking-widest shadow-xl shadow-indigo-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xs">
+                                            Verify & Activate
+                                            <span class="material-symbols-outlined text-sm">verified</span>
+                                        </button>
+
+                                        <button type="button" onclick="backToSignupFields()"
+                                            class="w-full text-[10px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors uppercase tracking-widest">Back</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="modal-toggle-footer"
+                            class="mt-3 pt-3 border-t border-slate-100 dark:border-white/5 text-center">
+                            <p id="toggle-text" class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                                Don't have an account? <a href="javascript:void(0);" onclick="toggleAuthMode('signup')"
+                                    class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Sign up</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="src/js/main.js"></script>
+        <script>
+            let selectedRole = 'aspirant';
+            let authMode = 'login'; // login or signup
+
+            function openLoginModal() {
+                const modal = document.getElementById('login-modal');
+                
+                // Initialize state BEFORE showing to prevent flickering
+                toggleAuthMode('login');
+                backToEmail();
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+
+                // Instant position update
+                requestAnimationFrame(() => {
+                    const firstBtn = document.querySelector('.role-btn.active') || document.querySelector('.role-btn');
+                    if (firstBtn) updateRolePill(firstBtn);
+                });
+            }
+
+            function closeLoginModal() {
+                const modal = document.getElementById('login-modal');
+                const form = document.getElementById('loginForm');
+
+                // 1. Reset state while still visible (helps with animations/pills)
+                if (form) form.reset();
+                
+                // Reset Role Tabs
+                const aspirantBtn = document.querySelector('button[onclick*="aspirant"]');
+                if (aspirantBtn) switchRole('aspirant', aspirantBtn);
+
+                // Reset Login/Signup Tabs
+                authMode = 'login';
+                toggleAuthMode('login');
+                
+                // Clear deep steps
+                backToEmail();
+                backToSignupFields();
+
+                // 2. Hide Modal
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+
+            function backToSignupFields() {
+                const step1 = document.getElementById('signup-fields-step');
+                const step2 = document.getElementById('signup-otp-step');
+                if (step1) step1.classList.remove('hidden');
+                if (step2) step2.classList.add('hidden');
+            }
+
+            function updateRolePill(btn) {
+                const pill = document.getElementById('role-pill');
+                if (!pill || !btn) return;
+
+                const switcher = document.getElementById('role-switcher');
+                const switcherRect = switcher.getBoundingClientRect();
+                const btnRect = btn.getBoundingClientRect();
+
+                pill.style.width = `${btnRect.width}px`;
+                pill.style.height = `${btnRect.height}px`;
+                pill.style.left = `${btnRect.left - switcherRect.left}px`;
+                pill.style.top = `${btnRect.top - switcherRect.top}px`;
+            }
+
+            function switchRole(role, btn) {
+                selectedRole = role;
+                document.querySelectorAll('.role-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+
+                // Move the sliding pill
+                updateRolePill(btn);
+
+                const hint = document.getElementById('current-role');
+                hint.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+
+                updateFieldsVisibility();
+            }
+
+            function updateFieldsVisibility() {
+                const aspirantFieldsCont = document.getElementById('aspirant-fields-container');
+                const expertFieldsCont = document.getElementById('expert-fields-container');
+                
+                if (!aspirantFieldsCont || !expertFieldsCont) return;
+
+                if (authMode === 'signup') {
+                    if (selectedRole === 'expert') {
+                        aspirantFieldsCont.classList.remove('expanded');
+                        expertFieldsCont.classList.add('expanded');
+
+                        const expertFields = document.getElementById('expert-fields');
+                        if (expertFields) {
+                            expertFields.classList.remove('animate-slide-up');
+                            void expertFields.offsetWidth;
+                            expertFields.classList.add('animate-slide-up');
+                        }
+
+                        document.getElementById('signup-degree').required = true;
+                        document.getElementById('signup-academic-role').required = false;
+                    } else {
+                        aspirantFieldsCont.classList.add('expanded');
+                        expertFieldsCont.classList.remove('expanded');
+
+                        const aspirantFields = document.getElementById('aspirant-fields');
+                        if (aspirantFields) {
+                            aspirantFields.classList.remove('animate-slide-up');
+                            void aspirantFields.offsetWidth;
+                            aspirantFields.classList.add('animate-slide-up');
+                        }
+
+                        document.getElementById('signup-degree').required = false;
+                        document.getElementById('signup-academic-role').required = true;
+                    }
+                }
+            }
+
+            function toggleAuthMode(mode) {
+                // Clear form when switching modes
+                const form = document.getElementById('loginForm');
+                if (form) form.reset();
+
+                authMode = mode;
+                const modalTitle = document.getElementById('modal-title');
+                const modalSubtitle = document.getElementById('modal-subtitle');
+                const loginView = document.getElementById('login-view');
+                const signupView = document.getElementById('signup-view');
+                const actionText = document.getElementById('action-text');
+                const toggleText = document.getElementById('toggle-text');
+                const roleSwitcher = document.getElementById('role-switcher');
+                const adminWrapper = document.getElementById('admin-login-wrapper');
+
+                if (mode === 'signup') {
+                    modalTitle.textContent = 'Create Account';
+                    modalSubtitle.textContent = 'Join the Prefix community today';
+
+                    loginView.classList.add('hidden');
+                    signupView.classList.remove('hidden');
+
+                    document.getElementById('login-email').required = false;
+                    document.getElementById('login-otp').required = false;
+                    document.getElementById('signup-name').required = true;
+                    document.getElementById('signup-email').required = true;
+                    
+                    updateFieldsVisibility(); // Ensure correct fields are shown
+
+                    signupView.classList.remove('animate-slide-left', 'animate-slide-right', 'animate-view-fade');
+                    void signupView.offsetWidth;
+                    signupView.classList.add('animate-slide-right');
+
+                    actionText.textContent = 'Signing up as';
+                    toggleText.innerHTML = 'Already have an account? <a href="javascript:void(0);" onclick="toggleAuthMode(\'login\')" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Login</a>';
+
+                    roleSwitcher.classList.replace('grid-cols-3', 'grid-cols-2');
+                    adminWrapper.classList.add('hidden');
+                    adminWrapper.style.maxWidth = '0';
+                    adminWrapper.style.opacity = '0';
+
+                    if (selectedRole === 'admin') {
+                        switchRole('aspirant', document.querySelector('.role-btn'));
+                    }
+                } else {
+                    modalTitle.textContent = 'Welcome Back';
+                    modalSubtitle.textContent = 'Enter your details to continue';
+
+                    signupView.classList.add('hidden');
+                    loginView.classList.remove('hidden');
+
+                    document.getElementById('login-email').required = true;
+                    document.getElementById('signup-name').required = false;
+                    document.getElementById('signup-email').required = false;
+                    document.getElementById('signup-academic-role').required = false;
+                    document.getElementById('signup-degree').required = false;
+
+                    loginView.classList.remove('animate-slide-left', 'animate-slide-right', 'animate-view-fade');
+                    void loginView.offsetWidth;
+                    loginView.classList.add('animate-slide-left');
+
+                    actionText.textContent = 'Logging in as';
+                    toggleText.innerHTML = 'Don\'t have an account? <a href="javascript:void(0);" onclick="toggleAuthMode(\'signup\')" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Sign up</a>';
+
+                    roleSwitcher.classList.replace('grid-cols-2', 'grid-cols-3');
+                    adminWrapper.classList.remove('hidden');
+                    
+                    // Trigger reflow for transition
+                    void adminWrapper.offsetWidth;
+                    
+                    adminWrapper.style.maxWidth = '100%';
+                    adminWrapper.style.opacity = '1';
+                    
+                    requestAnimationFrame(() => {
+                        const activeBtn = document.querySelector('.role-btn.active');
+                        if (activeBtn) updateRolePill(activeBtn);
+                    });
+                }
+
+                const activeBtnPill = document.querySelector('.role-btn.active');
+                if (activeBtnPill) updateRolePill(activeBtnPill);
+            }
+
+            async function sendOTP() {
+                const emailInput = document.getElementById('login-email');
+                if (emailInput.reportValidity()) {
+                    const email = emailInput.value;
+                    const btn = document.querySelector('button[onclick="sendOTP()"]');
+                    const originalText = btn.innerHTML;
+
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Sending...';
+
+                    try {
+                        const response = await fetch('api/login.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: `email=${encodeURIComponent(email)}&role=${selectedRole}`
+                        });
+                        const data = await response.json();
+
+                        if (data.status === 'success') {
+                            document.getElementById('email-step').classList.add('hidden');
+                            document.getElementById('otp-step').classList.remove('hidden');
+
+                            // Debug mode hint (shows OTP if mailer is not configured)
+                            if (data.debug_otp) {
+                                console.log('DEBUG OTP:', data.debug_otp);
+                                alert('Demo Mode: Your OTP is ' + data.debug_otp);
+                            }
+
+                            setTimeout(() => {
+                                const otpInput = document.getElementById('login-otp');
+                                otpInput.required = true;
+                                otpInput.focus();
+                            }, 100);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Access Denied',
+                                text: data.message,
+                                confirmButtonColor: '#4f46e5'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'System Error',
+                            text: 'Failed to dispatch verification code. Please try again.',
+                            confirmButtonColor: '#4f46e5'
+                        });
+                    } finally {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                }
+            }
+
+            function backToEmail() {
+                document.getElementById('email-step').classList.remove('hidden');
+                document.getElementById('otp-step').classList.add('hidden');
+                const otpInput = document.getElementById('login-otp');
+                if (otpInput) otpInput.required = false;
+            }
+
+            function resendOTP() {
+                sendOTP();
+            }
+
+            async function initiateSignup() {
+                const name = document.getElementById('signup-name');
+                const email = document.getElementById('signup-email');
+                
+                if (!name.value || !email.reportValidity()) return;
+
+                const btn = document.getElementById('btn-signup-init');
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Sending OTP...';
+
+                try {
+                    const formData = new URLSearchParams();
+                    formData.append('name', name.value);
+                    formData.append('email', email.value);
+                    formData.append('phone', document.getElementById('signup-phone').value);
+                    formData.append('role', selectedRole === 'expert' ? 'expert' : document.getElementById('signup-academic-role').value);
+
+                    if (selectedRole === 'expert') {
+                        formData.append('degree', document.getElementById('signup-degree').value);
+                        formData.append('profession', document.getElementById('signup-profession').value);
+                        formData.append('dept', document.getElementById('signup-dept').value);
+                    }
+
+                    const response = await fetch('api/signup.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: formData.toString()
+                    });
+                    const data = await response.json();
+
+                    if (data.status === 'otp_sent') {
+                        // Crucial: Remove required from step 1 fields so step 2 can submit
+                        document.getElementById('signup-name').required = false;
+                        document.getElementById('signup-email').required = false;
+                        document.getElementById('signup-academic-role').required = false;
+                        document.getElementById('signup-degree').required = false;
+
+                        document.getElementById('signup-fields-step').classList.add('hidden');
+                        document.getElementById('signup-otp-step').classList.remove('hidden');
+                        
+                        // Debug Alert for Demo
+                        if (data.debug_otp) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Demo Mode',
+                                text: 'Signup OTP: ' + data.debug_otp,
+                                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                                color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a',
+                                confirmButtonColor: '#4f46e5'
+                            });
+                        }
+                    } else {
+                        Swal.fire({ 
+                            icon: 'error', 
+                            title: 'Signup Error', 
+                            text: data.message,
+                            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({ icon: 'error', title: 'System Error', text: 'Connection failed' });
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            }
+
+            function backToSignupFields() {
+                document.getElementById('signup-fields-step').classList.remove('hidden');
+                document.getElementById('signup-otp-step').classList.add('hidden');
+            }
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // Find the visible submit button
+                const btn = Array.from(e.target.querySelectorAll('button[type="submit"]')).find(b => !b.closest('.hidden'));
+                if (!btn) return;
+
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Processing...';
+
+                try {
+                    if (authMode === 'signup') {
+                        // VERIFY SIGNUP OTP
+                        const email = document.getElementById('signup-email').value;
+                        const otp = document.getElementById('signup-otp').value;
+
+                        const response = await fetch('api/verify_signup.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: `email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`
+                        });
+                        const data = await response.json();
+
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Identity Verified!',
+                                text: data.message,
+                                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                                color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a',
+                                confirmButtonColor: '#4f46e5',
+                                customClass: { popup: 'rounded-3xl', confirmButton: 'rounded-xl px-8 py-3' }
+                            }).then(() => {
+                                localStorage.setItem('prefix_new_user', Date.now());
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                } else {
+                                    document.getElementById('loginForm').reset();
+                                    toggleAuthMode('login');
+                                    backToEmail();
+                                    backToSignupFields();
+                                }
+                            });
+                        } else {
+                            Swal.fire({ 
+                                icon: 'error', 
+                                title: 'Verification Failed', 
+                                text: data.message,
+                                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                                color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a',
+                                confirmButtonColor: '#ef4444'
+                            });
+                        }
+                    } else {
+                        // Login / Verify Login OTP
+                        const email = document.getElementById('login-email').value;
+                        const otp = document.getElementById('login-otp').value;
+
+                        const response = await fetch('api/verify_otp.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: `email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}&role=${selectedRole}`
+                        });
+                        const data = await response.json();
+
+                        if (data.status === 'success') {
+                            document.getElementById('loginForm').reset();
+                            window.location.href = data.redirect;
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Authentication Failed',
+                                text: data.message,
+                                confirmButtonColor: '#4f46e5'
+                            });
+                        }
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops!',
+                        text: 'System heartbeat failure. Please retry shortly.',
+                        confirmButtonColor: '#ef4444'
+                    });
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
+
+            // Handle back button navigation to ensure modal is closed
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    closeLoginModal();
+                } else {
+                    // Also ensure closed on fresh load just in case
+                    closeLoginModal();
+                }
+            });
+
+            // Handle window resize to keep role pill aligned
+            window.addEventListener('resize', () => {
+                const activeBtn = document.querySelector('.role-btn.active');
+                if (activeBtn) updateRolePill(activeBtn);
+            });
+        </script>
+</body>
+
+</html>

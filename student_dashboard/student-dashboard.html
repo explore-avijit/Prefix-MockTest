@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Prefix Student Dashboard</title>
+    <meta name="description" content="Prefix Student Dashboard - Track your progress, attempt mock tests, and master your exams." />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b8cee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "accent-pink": "#f472b6",
+                        "accent-purple": "#a78bfa"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        *::-webkit-scrollbar { display: none !important; }
+        * { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+        .nav-link.active {
+            background: linear-gradient(to right, rgba(43, 140, 238, 0.1), transparent);
+            border-left: 3px solid #2b8cee;
+            color: #2b8cee;
+            font-weight: 700;
+        }
+        .nav-link.active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+        .page-content.hidden { display: none !important; }
+        .page-content {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 1);
+            box-shadow: 0 20px 25px -5px rgba(226, 232, 240, 0.5);
+        }
+        .dark .glass-card {
+            background-color: rgba(26, 37, 47, 0.8);
+            border-color: rgba(50, 77, 103, 1);
+            box-shadow: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2b8cee;
+            border-radius: 10px;
+        }
+        
+        .test-card-grade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 0.75rem;
+            width: 32px;
+            height: 32px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111a22] hidden md:flex flex-col">
+            <div class="p-8">
+                <div class="flex items-center gap-3 text-primary mb-1">
+                    <span class="material-symbols-outlined text-3xl font-black">diamond</span>
+                    <h1 class="text-2xl font-black tracking-tighter dark:text-white uppercase italic">Prefix</h1>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#0bda5b] animate-pulse"></span>
+                    <p class="text-slate-500 dark:text-[#92adc9] text-[10px] font-black uppercase tracking-[0.2em]">Student Portal</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-2">
+                <button class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-[#92adc9] hover:bg-slate-50 dark:hover:bg-[#233648] transition-all active" id="nav-overview" onclick="switchPage('overview', this)">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="text-sm">Dashboard</span>
+                </button>
+                <button class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-[#92adc9] hover:bg-slate-50 dark:hover:bg-[#233648] transition-all" id="nav-my-tests" onclick="switchPage('my-tests', this)">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">My Tests</span>
+                </button>
+                <button class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-[#92adc9] hover:bg-slate-50 dark:hover:bg-[#233648] transition-all" id="nav-leaderboard" onclick="switchPage('leaderboard', this)">
+                    <span class="material-symbols-outlined">leaderboard</span>
+                    <span class="text-sm">Leaderboard</span>
+                </button>
+                <button class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-[#92adc9] hover:bg-slate-50 dark:hover:bg-[#233648] transition-all" id="nav-performance" onclick="switchPage('performance', this)">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <span class="text-sm">Performance</span>
+                </button>
+                <button class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-[#92adc9] hover:bg-slate-50 dark:hover:bg-[#233648] transition-all" id="nav-bookmarks" onclick="switchPage('bookmarks', this)">
+                    <span class="material-symbols-outlined">bookmark</span>
+                    <span class="text-sm">Bookmarks</span>
+                </button>
+            </nav>
+
+            <div class="p-6">
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-primary via-blue-600 to-indigo-600 text-white shadow-lg shadow-primary/20 relative overflow-hidden group">
+                    <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+                    <p class="text-[10px] font-black uppercase tracking-tighter opacity-80 mb-2 font-display">Current Streak</p>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="material-symbols-outlined text-amber-300 font-bold">local_fire_department</span>
+                        <p class="text-lg font-black italic">12 Days</p>
+                    </div>
+                    <div class="w-full bg-white/20 h-1 rounded-full overflow-hidden mb-1">
+                        <div class="bg-white h-full w-[60%]"></div>
+                    </div>
+                    <p class="text-[8px] opacity-70 font-bold uppercase">3 tests left for weekly bonus</p>
+                </div>
+                <button class="w-full mt-6 flex items-center justify-between px-2 text-slate-500 hover:text-red-500 transition-colors group">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg group-hover:rotate-12 transition-transform">logout</span>
+                        <span class="text-xs font-bold uppercase tracking-wider">Logout</span>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <!-- Header -->
+            <header class="h-20 flex items-center justify-between px-8 bg-white/50 dark:bg-background-dark/50 backdrop-blur-xl border-b border-slate-200 dark:border-[#233648] flex-shrink-0 z-10">
+                <div class="flex-1 flex items-center gap-6">
+                    <div class="relative w-full max-w-lg group">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+                        <input class="w-full bg-slate-100 dark:bg-[#1a252f] border-transparent focus:border-primary focus:ring-0 rounded-2xl py-3 pl-12 pr-6 text-sm transition-all" placeholder="Search tests, questions, or subjects..." type="text"/>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button class="p-3 text-slate-500 bg-slate-100 dark:bg-[#1a252f] dark:text-[#92adc9] rounded-2xl hover:bg-primary/10 hover:text-primary transition-all relative">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="absolute top-3 right-3 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
+                    </button>
+                    <div class="h-8 w-[1px] bg-slate-200 dark:bg-[#233648] mx-2"></div>
+                    <div class="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-[#233648] p-1.5 pr-4 rounded-full transition-all border border-transparent hover:border-slate-200 dark:hover:border-[#324d67]">
+                        <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden shadow-inner">
+                            <img id="student-avatar" alt="Avatar" src="https://ui-avatars.com/api/?name=Sourav+Das&background=2b8cee&color=fff&bold=true"/>
+                        </div>
+                        <div class="hidden lg:block text-left">
+                            <p class="text-sm font-black dark:text-white leading-tight uppercase italic">Sourav Das</p>
+                            <p class="text-[10px] font-bold text-slate-500 tracking-wide">WBCS ASPIRANT • ID: #4402</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
+                
+                <!-- Page: Overview -->
+                <div class="page-content" id="page-overview">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+                        <div>
+                            <h2 class="text-4xl font-black dark:text-white mb-2 italic uppercase">Hello, Sourav!</h2>
+                            <p class="text-slate-500 dark:text-[#92adc9] font-bold">Your preparation journey is at <span class="text-primary italic">Peak Performance</span> today.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <a href="mock-test.html" class="bg-primary text-white px-8 py-4 rounded-2xl font-black uppercase text-sm flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/30 hover:-translate-y-1">
+                                <span class="material-symbols-outlined font-black">play_arrow</span>
+                                Start New Mock
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                        <div class="glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-primary transition-all cursor-default">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
+                                    <span class="material-symbols-outlined text-3xl">task</span>
+                                </div>
+                                <span class="text-[#0bda5b] text-[10px] font-black flex items-center bg-green-500/10 px-2 py-1 rounded-full uppercase">
+                                    +3 This Week
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Tests Completed</h3>
+                                <p class="text-4xl font-black dark:text-white italic tracking-tighter">48</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-orange-500 transition-all cursor-default">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="p-3 bg-orange-500/10 text-orange-500 rounded-2xl font-black text-xl italic flex items-center justify-center">
+                                    %
+                                </div>
+                                <span class="text-blue-500 text-[10px] font-black flex items-center bg-blue-500/10 px-2 py-1 rounded-full uppercase">
+                                    Top 5%
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Average Score</h3>
+                                <p class="text-4xl font-black dark:text-white italic tracking-tighter">82.4<span class="text-xl">%</span></p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-purple-500 transition-all cursor-default">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="p-3 bg-purple-500/10 text-purple-500 rounded-2xl">
+                                    <span class="material-symbols-outlined text-3xl">military_tech</span>
+                                </div>
+                                <span class="text-purple-500 text-[10px] font-bold px-2 py-1 bg-purple-500/10 rounded-full uppercase tracking-tighter">Diamond Tier</span>
+                            </div>
+                            <div>
+                                <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Global Rank</h3>
+                                <p class="text-4xl font-black dark:text-white italic tracking-tighter">#124</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-[#0bda5b] transition-all cursor-default text-white relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#0bda5b] to-green-600 z-0"></div>
+                            <div class="relative z-10 flex flex-col h-full justify-between">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="p-3 bg-white/20 text-white rounded-2xl">
+                                        <span class="material-symbols-outlined text-3xl">emoji_events</span>
+                                    </div>
+                                    <span class="bg-white/20 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter">Earned Today</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-white/70 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Prefix Credits</h3>
+                                    <p class="text-4xl font-black italic tracking-tighter">2,450</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended & Recent Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 glass-card rounded-[2.5rem] p-8 overflow-hidden relative">
+                            <div class="flex items-center justify-between mb-8 relative z-10">
+                                <div>
+                                    <h3 class="text-2xl font-black dark:text-white italic uppercase mb-1">Upcoming Live Mocks</h3>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">Compete with thousands in real-time</p>
+                                </div>
+                                <button class="text-primary text-[10px] font-black uppercase flex items-center gap-1 hover:gap-2 transition-all">
+                                    View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-4 relative z-10">
+                                <div class="flex items-center justify-between p-6 rounded-3xl bg-slate-50 dark:bg-[#233648]/40 border border-transparent hover:border-primary transition-all group cursor-pointer">
+                                    <div class="flex items-center gap-5">
+                                        <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                                            <span class="material-symbols-outlined text-3xl">history_edu</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-lg font-black dark:text-white uppercase italic">WBCS Full Prelims Mock #12</p>
+                                            <div class="flex items-center gap-3 mt-1">
+                                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">schedule</span> Starts in 2h 14m
+                                                </p>
+                                                <div class="h-1 w-1 rounded-full bg-slate-300"></div>
+                                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">group</span> 1.5k+ Enrolled
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-6 py-3 rounded-xl shadow-lg shadow-primary/20 opacity-0 group-hover:opacity-100 transition-all hover:scale-105 active:scale-95">Enroll Now</button>
+                                </div>
+
+                                <div class="flex items-center justify-between p-6 rounded-3xl bg-slate-50 dark:bg-[#233648]/40 border border-transparent hover:border-orange-500 transition-all group cursor-pointer">
+                                    <div class="flex items-center gap-5">
+                                        <div class="w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                                            <span class="material-symbols-outlined text-3xl">local_police</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-lg font-black dark:text-white uppercase italic">WB Police SI - Reasoning Special</p>
+                                            <div class="flex items-center gap-3 mt-1">
+                                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">calendar_today</span> Tomorrow, 10:00 AM
+                                                </p>
+                                                <div class="h-1 w-1 rounded-full bg-slate-300"></div>
+                                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-xs">group</span> 850 Enrolled
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="bg-orange-500 text-white text-[10px] font-black uppercase px-6 py-3 rounded-xl shadow-lg shadow-orange-500/20 opacity-0 group-hover:opacity-100 transition-all hover:scale-105 active:scale-95">Enroll Now</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card rounded-[2.5rem] p-8 flex flex-col border-primary/20 bg-gradient-to-b from-primary/5 to-transparent">
+                            <h3 class="text-xl font-black dark:text-white italic uppercase mb-6">Recent Activity</h3>
+                            <div class="flex-1 space-y-6">
+                                <div class="flex gap-4 relative">
+                                    <div class="absolute left-4 top-10 bottom-0 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
+                                    <div class="w-8 h-8 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center shrink-0 z-10">
+                                        <span class="material-symbols-outlined text-sm font-black">check</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-black dark:text-white uppercase italic">WBCS History Set-4</p>
+                                        <p class="text-[10px] font-bold text-slate-500">Score: 42/50 • Accuracy: 94%</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 uppercase">Attempted 1 hr ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 relative">
+                                    <div class="absolute left-4 top-10 bottom-0 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
+                                    <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 z-10">
+                                        <span class="material-symbols-outlined text-sm font-black">bookmark</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-black dark:text-white uppercase italic">Bookmarked a Question</p>
+                                        <p class="text-[10px] font-bold text-slate-500">In Logic & Reasoning Section</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 uppercase">3 hrs ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-sm font-black">social_leaderboard</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-black dark:text-white uppercase italic">Climbed leaderboard</p>
+                                        <p class="text-[10px] font-bold text-slate-500">Reached Rank #124 globally</p>
+                                        <p class="text-[8px] text-slate-400 mt-1 uppercase">Yesterday</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-8">
+                                <button onclick="switchPage('my-tests', document.getElementById('nav-my-tests'))" class="w-full bg-slate-900 dark:bg-primary py-4 rounded-2xl text-white font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-xl">
+                                    View Detailed History <span class="material-symbols-outlined text-sm">history</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: My Tests -->
+                <div class="page-content hidden" id="page-my-tests">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+                        <div>
+                            <h2 class="text-4xl font-black dark:text-white mb-2 italic uppercase">Test History</h2>
+                            <p class="text-slate-500 dark:text-[#92adc9] font-bold">Review your past performance and analyze mistakes.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                             <div class="flex items-center bg-slate-100 dark:bg-[#111a22] p-1.5 rounded-2xl border border-slate-200 dark:border-[#324d67]">
+                                <button class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all bg-white dark:bg-primary text-primary dark:text-white shadow-sm italic">All Tests</button>
+                                <button class="px-6 py-2 rounded-xl text-xs font-black uppercase text-slate-500 hover:text-primary transition-all tracking-tighter">Mock Only</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- History Card 1 -->
+                        <div class="glass-card rounded-[2.5rem] p-6 hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+                            <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-500/5 rounded-full blur-2xl group-hover:bg-green-500/10 transition-colors"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="bg-primary/10 text-primary p-3 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl font-black">school</span>
+                                </div>
+                                <div class="test-card-grade bg-green-500 text-white">A+</div>
+                            </div>
+                            <h3 class="text-xl font-black dark:text-white italic uppercase mb-2">WBCS History Set-4</h3>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Subject: History • Feb 04, 2026</p>
+                            
+                            <div class="grid grid-cols-3 gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Score</p>
+                                    <p class="text-sm font-black dark:text-white">42/50</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Accuracy</p>
+                                    <p class="text-sm font-black text-green-500">94%</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Time</p>
+                                    <p class="text-sm font-black dark:text-white">22m</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- History Card 2 -->
+                        <div class="glass-card rounded-[2.5rem] p-6 hover:border-orange-500 transition-all group cursor-pointer relative overflow-hidden">
+                             <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-500/5 rounded-full blur-2xl group-hover:bg-orange-500/10 transition-colors"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="bg-orange-500/10 text-orange-500 p-3 rounded-2xl group-hover:bg-orange-500 group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl font-black">psychology</span>
+                                </div>
+                                <div class="test-card-grade bg-orange-500 text-white">B</div>
+                            </div>
+                            <h3 class="text-xl font-black dark:text-white italic uppercase mb-2">Maths Mental Ability</h3>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Subject: Maths • Feb 02, 2026</p>
+                            
+                            <div class="grid grid-cols-3 gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Score</p>
+                                    <p class="text-sm font-black dark:text-white">35/50</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Accuracy</p>
+                                    <p class="text-sm font-black text-orange-500">76%</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Time</p>
+                                    <p class="text-sm font-black dark:text-white">48m</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="glass-card rounded-[2.5rem] p-6 hover:border-blue-500 transition-all group cursor-pointer relative overflow-hidden">
+                             <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="bg-blue-500/10 text-blue-500 p-3 rounded-2xl group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl font-black">translate</span>
+                                </div>
+                                <div class="test-card-grade bg-blue-500 text-white">A</div>
+                            </div>
+                            <h3 class="text-xl font-black dark:text-white italic uppercase mb-2">English Vocab Mastery</h3>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Subject: English • Jan 30, 2026</p>
+                            
+                            <div class="grid grid-cols-3 gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Score</p>
+                                    <p class="text-sm font-black dark:text-white">45/50</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Accuracy</p>
+                                    <p class="text-sm font-black text-blue-500">90%</p>
+                                </div>
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-tighter">Time</p>
+                                    <p class="text-sm font-black dark:text-white">15m</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Leaderboard -->
+                <div class="page-content hidden" id="page-leaderboard">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+                        <div>
+                            <h2 class="text-4xl font-black dark:text-white mb-2 italic uppercase">Global Leaderboard</h2>
+                            <p class="text-slate-500 dark:text-[#92adc9] font-bold">See where you stand against the top aspirants in West Bengal.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                        <div class="lg:col-span-1 flex flex-col gap-6">
+                            <!-- Top 3 Mini Cards -->
+                            <div class="glass-card rounded-[2rem] p-6 border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-transparent flex items-center gap-4">
+                                <div class="relative">
+                                    <img src="https://i.pravatar.cc/150?img=1" class="w-16 h-16 rounded-full border-2 border-amber-500 p-1" alt="Rank 1">
+                                    <div class="absolute -top-2 -left-2 bg-amber-500 text-white w-6 h-6 rounded-full flex items-center justify-center font-black text-xs">1</div>
+                                </div>
+                                <div>
+                                    <p class="font-black dark:text-white italic uppercase">Anindita Roy</p>
+                                    <p class="text-[10px] font-bold text-slate-500">4,850 Credits • Accuracy 99%</p>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-[2rem] p-6 border-slate-300/30 bg-gradient-to-br from-slate-300/5 to-transparent flex items-center gap-4">
+                                <div class="relative">
+                                    <img src="https://i.pravatar.cc/150?img=2" class="w-16 h-16 rounded-full border-2 border-slate-300 p-1" alt="Rank 2">
+                                    <div class="absolute -top-2 -left-2 bg-slate-400 text-white w-6 h-6 rounded-full flex items-center justify-center font-black text-xs">2</div>
+                                </div>
+                                <div>
+                                    <p class="font-black dark:text-white italic uppercase">Rohan Das</p>
+                                    <p class="text-[10px] font-bold text-slate-500">4,620 Credits • Accuracy 97%</p>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-[2rem] p-6 border-orange-500/30 bg-gradient-to-br from-orange-500/5 to-transparent flex items-center gap-4">
+                                <div class="relative">
+                                    <img src="https://i.pravatar.cc/150?img=3" class="w-16 h-16 rounded-full border-2 border-orange-500 p-1" alt="Rank 3">
+                                    <div class="absolute -top-2 -left-2 bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center font-black text-xs">3</div>
+                                </div>
+                                <div>
+                                    <p class="font-black dark:text-white italic uppercase">Priya Sen</p>
+                                    <p class="text-[10px] font-bold text-slate-500">4,400 Credits • Accuracy 96%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 glass-card rounded-[2.5rem] overflow-hidden">
+                             <table class="w-full text-left">
+                                <thead class="bg-slate-50/50 dark:bg-[#1a252f]/50 border-b border-slate-100 dark:border-[#324d67]">
+                                    <tr>
+                                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Rank</th>
+                                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Competitor</th>
+                                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Subject</th>
+                                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Accuracy</th>
+                                        <th class="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] text-right">Credits</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-[#324d67]">
+                                    <tr class="hover:bg-slate-50/50 dark:hover:bg-[#233648]/20 transition-all group">
+                                        <td class="px-8 py-6 text-xs font-black italic text-slate-400">#122</td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0">
+                                                    <img src="https://i.pravatar.cc/80?img=5" alt="">
+                                                </div>
+                                                <p class="text-sm font-bold dark:text-white">Amitav Ghosh</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-[10px] font-black text-slate-500 uppercase italic">Aspirant • WBCS</td>
+                                        <td class="px-8 py-6 text-sm font-black text-primary italic">88%</td>
+                                        <td class="px-8 py-6 text-right font-black italic text-slate-900 dark:text-white">2,510</td>
+                                    </tr>
+                                    <tr class="bg-primary/5 dark:bg-primary/10 border-l-4 border-primary">
+                                        <td class="px-8 py-6 text-xs font-black italic text-primary">#124</td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-primary/20 overflow-hidden shrink-0 border border-primary">
+                                                    <img src="https://ui-avatars.com/api/?name=Sourav+Das&background=2b8cee&color=fff" alt="">
+                                                </div>
+                                                <p class="text-sm font-black dark:text-white">Sourav Das (You)</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-[10px] font-black text-slate-500 uppercase italic">Aspirant • WBCS</td>
+                                        <td class="px-8 py-6 text-sm font-black text-primary italic">82%</td>
+                                        <td class="px-8 py-6 text-right font-black italic text-slate-900 dark:text-white">2,450</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50/50 dark:hover:bg-[#233648]/20 transition-all group">
+                                        <td class="px-8 py-6 text-xs font-black italic text-slate-400">#125</td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0">
+                                                    <img src="https://i.pravatar.cc/80?img=8" alt="">
+                                                </div>
+                                                <p class="text-sm font-bold dark:text-white">Debosmita Pal</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-[10px] font-black text-slate-500 uppercase italic">Student • HS Sci</td>
+                                        <td class="px-8 py-6 text-sm font-black text-primary italic">81%</td>
+                                        <td class="px-8 py-6 text-right font-black italic text-slate-900 dark:text-white">2,420</td>
+                                    </tr>
+                                </tbody>
+                             </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function switchPage(pageId, btn) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            const targetPage = document.getElementById('page-' + pageId);
+            if(targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+            
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            if(btn) {
+                btn.classList.add('active');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+             // Theme Toggle logic from admin (simulated here)
+             if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+             }
+        });
+    </script>
+</body>
+</html>

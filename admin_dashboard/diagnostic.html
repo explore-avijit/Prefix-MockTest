@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Button Diagnostic</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1e293b; }
+        h2 { color: #475569; margin-top: 0; }
+        .status { 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success { background: #dcfce7; color: #166534; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .info { background: #dbeafe; color: #1e40af; }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-edit { background: #e2e8f0; color: #1e293b; }
+        .btn-delete { background: #fecaca; color: #991b1b; }
+        .btn-edit:hover { background: #cbd5e1; }
+        .btn-delete:hover { background: #fca5a5; }
+        #console-output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Admin Dashboard Action Button Diagnostic</h1>
+    
+    <div class="section">
+        <h2>Step 1: Check if Functions Exist</h2>
+        <div id="function-check"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Step 2: Test Function Calls</h2>
+        <button class="btn-edit" onclick="testOpenEditModal()">Test openEditModal()</button>
+        <button class="btn-delete" onclick="testConfirmDelete()">Test confirmDelete()</button>
+        <button class="btn-edit" onclick="testUpdateStatus()">Test updateUserStatus()</button>
+    </div>
+    
+    <div class="section">
+        <h2>Step 3: Simulate Dynamic Button Generation</h2>
+        <div id="dynamic-buttons"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Step 4: Test API Endpoint</h2>
+        <button onclick="testAPI()">Test GET User API</button>
+        <div id="api-result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Console Output</h2>
+        <div id="console-output"></div>
+    </div>
+
+    <script>
+        // Redirect console.log to our output div
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function log(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : '📝';
+            consoleOutput.innerHTML += `[${timestamp}] ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            if (type === 'error') {
+                originalError(message);
+            } else {
+                originalLog(message);
+            }
+        }
+        
+        console.log = (...args) => log(args.join(' '), 'log');
+        console.error = (...args) => log(args.join(' '), 'error');
+        
+        // Step 1: Check if functions exist
+        function checkFunctions() {
+            const functions = ['openModal', 'closeModal', 'openEditModal', 'confirmDelete', 'updateUserStatus'];
+            const results = [];
+            
+            functions.forEach(fn => {
+                const exists = typeof window[fn] === 'function';
+                results.push({
+                    name: fn,
+                    exists: exists,
+                    type: exists ? typeof window[fn] : 'undefined'
+                });
+                
+                if (exists) {
+                    log(`✅ window.${fn} exists`, 'success');
+                } else {
+                    log(`❌ window.${fn} NOT FOUND`, 'error');
+                }
+            });
+            
+            const table = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function Name</th>
+                            <th>Exists</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${results.map(r => `
+                            <tr>
+                                <td><code>window.${r.name}</code></td>
+                                <td><span class="${r.exists ? 'success' : 'error'} status">${r.exists ? '✅ YES' : '❌ NO'}</span></td>
+                                <td>${r.type}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('function-check').innerHTML = table;
+        }
+        
+        // Step 2: Test function calls
+        function testOpenEditModal() {
+            log('Testing openEditModal(999, "expert")...');
+            try {
+                if (typeof window.openEditModal === 'function') {
+                    window.openEditModal(999, 'expert');
+                    log('✅ openEditModal called successfully', 'success');
+                } else {
+                    log('❌ openEditModal is not a function', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function testConfirmDelete() {
+            log('Testing confirmDelete(999, "expert")...');
+            try {
+                if (typeof window.confirmDelete === 'function') {
+                    window.confirmDelete(999, 'expert');
+                    log('✅ confirmDelete called successfully', 'success');
+                } else {
+                    log('❌ confirmDelete is not a function', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function testUpdateStatus() {
+            log('Testing updateUserStatus(999, "active", "expert")...');
+            try {
+                if (typeof window.updateUserStatus === 'function') {
+                    window.updateUserStatus(999, 'active', 'expert');
+                    log('✅ updateUserStatus called successfully', 'success');
+                } else {
+                    log('❌ updateUserStatus is not a function', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Step 3: Simulate dynamic button generation
+        function generateDynamicButtons() {
+            const user = { id: 123, full_name: 'Test Expert', status: 'active' };
+            
+            const html = `
+                <p><strong>Simulating how admin dashboard generates buttons:</strong></p>
+                <div style="background: #f1f5f9; padding: 15px; border-radius: 4px; margin: 10px 0;">
+                    <p>User: ${user.full_name} (ID: ${user.id})</p>
+                    <button type="button" 
+                            onclick="event.stopPropagation(); openEditModal(${user.id}, 'expert')" 
+                            class="btn-edit">
+                        ✏️ Edit
+                    </button>
+                    <button type="button" 
+                            onclick="event.stopPropagation(); confirmDelete(${user.id}, 'expert')" 
+                            class="btn-delete">
+                        🗑️ Delete
+                    </button>
+                </div>
+                <p class="info status">Click the buttons above to test if they work when generated dynamically</p>
+            `;
+            
+            document.getElementById('dynamic-buttons').innerHTML = html;
+            log('✅ Dynamic buttons generated', 'success');
+        }
+        
+        // Step 4: Test API
+        async function testAPI() {
+            log('Testing API: ../api/admin/get_users.php?role=expert&page=1');
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '<p class="info status">Loading...</p>';
+            
+            try {
+                const response = await fetch('../api/admin/get_users.php?role=expert&page=1&limit=5');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    log(`✅ API Success: Fetched ${data.data.length} users`, 'success');
+                    resultDiv.innerHTML = `
+                        <div class="success status">
+                            <strong>✅ API Working!</strong><br>
+                            Total Users: ${data.pagination.total}<br>
+                            Fetched: ${data.data.length} users
+                        </div>
+                        <pre>${JSON.stringify(data.data[0] || {}, null, 2)}</pre>
+                    `;
+                } else {
+                    log(`❌ API Error: ${data.message}`, 'error');
+                    resultDiv.innerHTML = `<div class="error status">❌ ${data.message}</div>`;
+                }
+            } catch (error) {
+                log(`❌ Fetch Error: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<div class="error status">❌ ${error.message}</div>`;
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            log('=== Diagnostic Page Loaded ===');
+            checkFunctions();
+            generateDynamicButtons();
+            log('=== Ready for Testing ===');
+        });
+    </script>
+</body>
+</html>

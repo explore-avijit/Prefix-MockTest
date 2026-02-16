@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+vendor/
+
+# IDE/System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project Specific
+.agent/
+.temp_ag_kit/
+*.log
+checklist_results.txt
+schema_output.txt
+stats_output.json
+prompt.txt
+
+# Temp/Cache
+.parcel-cache/
+dist/
+build/

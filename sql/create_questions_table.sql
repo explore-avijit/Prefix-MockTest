@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    unique_id VARCHAR(50) NOT NULL UNIQUE,
+    language ENUM('Bengali', 'English') DEFAULT 'English',
+    role ENUM('student', 'aspirant') NOT NULL,
+    academic_level VARCHAR(50),
+    subject VARCHAR(100),
+    category VARCHAR(100),
+    question_text TEXT NOT NULL,
+    option_a VARCHAR(255) NOT NULL,
+    option_b VARCHAR(255) NOT NULL,
+    option_c VARCHAR(255) NOT NULL,
+    option_d VARCHAR(255) NOT NULL,
+    correct_answer VARCHAR(50) NOT NULL,
+    explanation TEXT,
+    difficulty VARCHAR(20) DEFAULT 'Medium',
+    status ENUM('pending', 'approved', 'rejected', 'suspended') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
